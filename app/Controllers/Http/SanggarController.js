@@ -3,7 +3,6 @@ const Sanggar = use("App/Models/Sanggar");
 const DancePackage = use("App/Models/DancePackage");
 const Order = use("App/Models/Order");
 const Midtrans = use("Midtrans");
-const Helpers = use("Helpers");
 class SanggarController {
   async index({ response }) {
     try {
@@ -34,59 +33,20 @@ class SanggarController {
     }
   }
 
-  async createDancePackage({ auth, params, request, response }) {
+  async editSanggar({ auth, request, params, response }) {
     try {
       const user = await auth.getUser();
+      const data = request.all();
       const partner = await Sanggar.find(params.sanggarId);
       if (user.id == partner.partnerId) {
-        const allData = request.all();
-        allData.sanggarId = params.sanggarId;
-        const dancePackage = await DancePackage.create(allData);
-        dancePackage.sanggarId = params.sanggarId;
-        await dancePackage.save();
-
-        return response
-          .status(200)
-          .json({ message: "Success", data: dancePackage });
+        await Sanggar.query().where('id', params.sanggarId).update(data);
+        return response.status(200).json({ status: 200, message: "success!"  });
       }
       return response
         .status(400)
         .json({ message: "Failed!, unauthorized user!" });
-    } catch (error) {
-      return response.status(400).json({ message: "Failed!, error occured" });
-    }
-  }
-
-  async editDancePackage({ auth, request, response }) {}
-
-  async indexDancePackage({ auth, params, response }) {
-    try {
-      const dancePackage = await DancePackage.query()
-        .where("sanggarId", params.sanggarId)
-        .fetch();
-      response.status(201).json({ message: "Success", data: dancePackage });
-    } catch (err) {
-      response.status(500).json({ message: err });
-    }
-  }
-
-  async detailDancePackage({ params, response }) {
-    try {
-      const dancePackage = await DancePackage.find(params.dancePackageId);
-      response.status(201).json({ message: "Success", data: dancePackage });
-    } catch (err) {
-      response.status(500).json({ message: err });
-    }
-  }
-
-  async editSanggar({ auth, request, params, response }) {
-    try {
-      const user = await auth.getUser();
-      const sanggar = await Sanggar.find(params.id);
-      const data = request.all()
-      console.log(data)
-    } catch (error) {
-      response.status(500).json({ message: error });
+    } catch (e) {
+      response.status(500).json({ status: 400, message: "An error occured!" });
     }
   }
 
@@ -161,6 +121,51 @@ class SanggarController {
         .where("id", orderId)
         .update({ order_statusId: 1 });
       return response.status(200).json({ message: "success", data: tra });
+    }
+  }
+
+  async indexDancePackage({ auth, params, response }) {
+    try {
+      const dancePackage = await DancePackage.query()
+        .where("sanggarId", params.sanggarId)
+        .fetch();
+      response.status(201).json({ message: "Success", data: dancePackage });
+    } catch (err) {
+      response.status(500).json({ message: err });
+    }
+  }
+
+  async createDancePackage({ auth, params, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const partner = await Sanggar.find(params.sanggarId);
+      if (user.id == partner.partnerId) {
+        const allData = request.all();
+        allData.sanggarId = params.sanggarId;
+        const dancePackage = await DancePackage.create(allData);
+        dancePackage.sanggarId = params.sanggarId;
+        await dancePackage.save();
+
+        return response
+          .status(200)
+          .json({ message: "Success", data: dancePackage });
+      }
+      return response
+        .status(400)
+        .json({ message: "Failed!, unauthorized user!" });
+    } catch (error) {
+      return response.status(400).json({ message: "Failed!, error occured" });
+    }
+  }
+
+  async editDancePackage({ auth, request, response }) {}
+
+  async detailDancePackage({ params, response }) {
+    try {
+      const dancePackage = await DancePackage.find(params.dancePackageId);
+      response.status(201).json({ message: "Success", data: dancePackage });
+    } catch (err) {
+      response.status(500).json({ message: err });
     }
   }
 }

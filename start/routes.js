@@ -28,14 +28,14 @@ Route.group(() => {
 }).prefix("/api");
 
 Route.group(() => {
-  Route.post("/auth/logout", "UserController.logout");
+  Route.post("/auth/logout", "UserController.logout"); 
   Route.get("/order", "CustomerController.indexOrder");
   Route.get("/order/:id", "CustomerController.detailOrder");
   Route.post("sanggar/:sanggarId/order", "CustomerController.createOrder");
   Route.post("/sanggar/order", "SanggarController.charge");
   Route.post("/partner-registration", "UserController.partnerRegistration");
   Route.put("/sanggar/:sanggarId/delete", "SanggarController.deleteSanggar");
-  Route.put("/sanggar/:sanggarId/edit", "SanggarController.editSanggar");
+  Route.patch("/sanggar/:sanggarId/edit", "SanggarController.editSanggar");
 })
   .middleware(["auth"])
   .prefix("api/");
