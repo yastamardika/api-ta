@@ -11,9 +11,9 @@ class SoftDeletesSchema extends Schema {
     this.table('dance_packages', (table) => {
       table.timestamp('deleted_at')
     })
-    this.table('users', (table) => {
-      table.timestamp('deleted_at')
-    })
+    // this.table('users', (table) => {
+    //   table.timestamp('deleted_at')
+    // })
   }
 
   down () {
