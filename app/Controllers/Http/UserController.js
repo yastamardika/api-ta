@@ -1,10 +1,13 @@
 "use strict";
+
+const cloudinary = require("../../Services/Cloudinary");
+
 const User = use("App/Models/User");
 const Persona = use("Persona");
 const SanggarAddress = use("App/Models/AddressSanggar");
 const Sanggar = use("App/Models/Sanggar");
 const Database = use("Database");
-
+const Cloudinary = use('App/Services/Cloudinary');
 const Helpers = use("Helpers");
 
 class UserController {
@@ -112,6 +115,8 @@ class UserController {
     ]);
 
     try {
+      const cloudinaryResponse = await Cloudinary.v2.uploader.upload(Helpers.tmpPath("uploads/"+imgName), {folder: 'sanggar'});
+      // console.log(cloudinaryResponse)
       const address = await SanggarAddress.create({
         address: addressInfo.address,
         city: addressInfo.city,
@@ -128,7 +133,7 @@ class UserController {
         (sanggar.description = userInfo.description),
         (sanggar.phone = userInfo.phone),
         (sanggar.email = userInfo.email),
-        (sanggar.photo = Helpers.tmpPath(imgName)),
+        (sanggar.photo = cloudinaryResponse.secure_url),
       sanggar.partnerId = user.id;
       sanggar.sanggar_addressId = address.id;
 

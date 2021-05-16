@@ -25,6 +25,7 @@ class SanggarController {
       const sanggar = await Sanggar.query()
         .with("address")
         .with("packages")
+        .with("user")
         .where("id", params.id)
         .fetch();
       response.status(201).json({ message: "Success", data: sanggar });

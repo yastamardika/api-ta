@@ -134,7 +134,7 @@ module.exports = {
   csrf: {
     enable: false,
     methods: ['POST', 'PUT', 'DELETE'],
-    filterUris: [],
+    filterUris: ['/api/partner-registration'],
     cookieOptions: {
       httpOnly: false,
       sameSite: true,
