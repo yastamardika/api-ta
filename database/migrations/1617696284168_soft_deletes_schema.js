@@ -13,7 +13,7 @@ class SoftDeletesSchema extends Schema {
     })
     // this.table('users', (table) => {
     //   table.timestamp('deleted_at')
-    // })
+    // }) already on user.js 
   }
 
   down () {
