@@ -17,13 +17,13 @@ const Hash = use('Hash')
 
 class UserSeeder {
   async run() {
-    // await User.create({
-    //   username: "admin",
-    //   email : "admin@i-tallenta.com",
-    //   password: await Hash.make("masukaja"),
-    //   account_status: "active",
-    //   role: "admin",
-    // });
+    await User.create({
+      username: "admin",
+      email : "admin@i-tallenta.com",
+      password: await Hash.make("masukaja"),
+      account_status: "active",
+      role: "admin",
+    });
   }
 }
 
