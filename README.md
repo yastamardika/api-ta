@@ -29,3 +29,7 @@ Run the following command to run startup migrations.
 ```js
 adonis migration:run
 ```
+
+### CI/CD
+.profile
+release: ENV_SILENT=true node ace migration:rollback --force
