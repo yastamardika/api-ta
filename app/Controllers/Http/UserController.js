@@ -133,7 +133,8 @@ class UserController {
         (sanggar.description = userInfo.description),
         (sanggar.phone = userInfo.phone),
         (sanggar.email = userInfo.email),
-        (sanggar.photo = cloudinaryResponse.secure_url),
+        // (sanggar.photo = cloudinaryResponse.secure_url), //cloudinary secure_url via nuxt-module
+        (sanggar.photo = userInfo.photo)
       sanggar.partnerId = user.id;
       sanggar.sanggar_addressId = address.id;
 
