@@ -9,7 +9,7 @@ class UserSchema extends Schema {
       table.string('username', 80).notNullable().unique()
       table.string('email', 254).notNullable().unique()
       table.string('password', 60).notNullable()
-      table.enum('role',['costumer','partner','admin']).defaultTo('costumer')
+      table.enum('role',['customer','partner','admin']).defaultTo('customer')
       table.string('account_status')
       table.datetime('deleted_at')
       table.datetime('verified_by_admin_at')
