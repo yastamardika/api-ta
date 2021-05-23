@@ -132,11 +132,11 @@ class UserController {
       "google_map_link",
     ]);
 
+    // const cloudinaryResponse = await Cloudinary.v2.uploader.upload(
+    //   Helpers.tmpPath("uploads/" + imgName),
+    //   { folder: "sanggar" }
+    // );
     try {
-      const cloudinaryResponse = await Cloudinary.v2.uploader.upload(
-        Helpers.tmpPath("uploads/" + imgName),
-        { folder: "sanggar" }
-      );
       // console.log(cloudinaryResponse)
       const address = await SanggarAddress.create({
         address: addressInfo.address,
@@ -163,7 +163,7 @@ class UserController {
 
       // once done commit the transaction
       trx.commit();
-      return response.status(200).json({ message: "success", data: sanggar });
+      response.status(200).json({ message: "success", data: sanggar });
       //
     } catch (e) {
       console.log("There has been an error >>", e);
