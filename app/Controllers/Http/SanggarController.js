@@ -8,13 +8,13 @@ class SanggarController {
     try {
       const address = await Sanggar.query()
         .whereHas("user", (builder) => {
-          builder.where("role", "partner");
+          builder.whereNotNull("verified_by_admin_at");
         })
         .with("address")
         .with("user")
         .whereNull("deleted_at")
         .fetch();
-      response.status(201).json({ messages: "Success", data: address });
+      response.status(200).json({ messages: "Success", data: address });
     } catch (err) {
       response.status(500).json({ messages: "error" });
     }
