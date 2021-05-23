@@ -3,7 +3,7 @@
 const User = use("App/Models/User");
 const Database = use("Database");
 const Persona = use("Persona");
-class AdminController {
+class AdminController {   
   async verifyPartner({ auth, params, response }) {
     const currentUser = await auth.getUser();
     const toBePartner = await User.find(params.id);
