@@ -71,7 +71,7 @@ class UserController {
     const token = request.input("token");
     const user = await Persona.verifyEmail(token);
     session.flash({ message: "Email verified" });
-    return view.render('verified',  { user: user.toJSON() });
+    return view.render('verified');
   }
 
   async partnerRegistration({ auth, request, response }) {
