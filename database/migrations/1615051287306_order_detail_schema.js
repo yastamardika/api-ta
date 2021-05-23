@@ -16,7 +16,7 @@ class OrderDetailSchema extends Schema {
   }
 
   down () {
-    // this.drop('order_details')
+    this.drop('order_details')
   }
 }
 

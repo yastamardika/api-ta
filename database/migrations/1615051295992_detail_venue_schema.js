@@ -17,7 +17,7 @@ class DetailVenueSchema extends Schema {
   }
 
   down () {
-    // this.drop('detail_venues')
+    this.drop('detail_venues')
   }
 }
 

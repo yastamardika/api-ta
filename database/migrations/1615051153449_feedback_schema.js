@@ -13,7 +13,7 @@ class FeedbackSchema extends Schema {
   }
 
   down () {
-    // this.drop('feedbacks')
+    this.drop('feedbacks')
   }
 }
 

@@ -15,7 +15,7 @@ class PaymentSchema extends Schema {
   }
 
   down () {
-    // this.drop('payments')
+    this.drop('payments')
   }
 }
 

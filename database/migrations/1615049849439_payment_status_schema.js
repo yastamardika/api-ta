@@ -13,7 +13,7 @@ class PaymentStatusSchema extends Schema {
   }
 
   down () {
-    // this.drop('payment_statuses')
+    this.drop('payment_statuses')
   }
 }
 
