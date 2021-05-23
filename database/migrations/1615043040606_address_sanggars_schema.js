@@ -17,7 +17,7 @@ class AddressSanggarsSchema extends Schema {
   }
 
   down () {
-    this.drop('address_sanggars')
+    // this.drop('address_sanggars')
   }
 }
 

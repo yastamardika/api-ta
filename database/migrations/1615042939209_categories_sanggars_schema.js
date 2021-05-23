@@ -12,7 +12,7 @@ class CategoriesSanggarsSchema extends Schema {
   }
 
   down () {
-    this.drop('categories_sanggars')
+    // this.drop('categories_sanggars')
   }
 }
 

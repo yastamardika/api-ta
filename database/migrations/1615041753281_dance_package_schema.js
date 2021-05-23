@@ -18,7 +18,7 @@ class DancePackageSchema extends Schema {
   }
 
   down () {
-    this.drop('dance_packages')
+    // this.drop('dance_packages')
   }
 }
 

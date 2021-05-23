@@ -18,7 +18,7 @@ class SanggarSchema extends Schema {
   }
 
   down () {
-    this.drop('sanggars')
+    // this.drop('sanggars')
   }
 }
 

@@ -27,7 +27,7 @@ class AccountSanggarSchema extends Schema {
   }
 
   down() {
-    this.drop("account_sanggars");
+    // this.drop("account_sanggars");
   }
 }
 
