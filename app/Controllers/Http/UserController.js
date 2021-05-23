@@ -43,7 +43,7 @@ class UserController {
 
   async getDetailUser({ auth, params, response }) {
     const currentUser = await auth.getUser();
-    const detailUser = await UserUser.query()
+    const detailUser = await User.query()
       .where("id", params.id)
       .with("sanggar")
       .fetch();
