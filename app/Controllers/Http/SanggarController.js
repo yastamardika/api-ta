@@ -7,9 +7,9 @@ class SanggarController {
   async index({ response }) {
     try {
       const address = await Sanggar.query()
-        // .whereHas("user", (builder) => {
-        //   builder.where("role", "partner");
-        // })
+        .whereHas("user", (builder) => {
+          builder.where("role", "partner");
+        })
         .with("address")
         .with("user")
         .whereNull("deleted_at")
