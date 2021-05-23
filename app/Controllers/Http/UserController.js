@@ -39,6 +39,17 @@ class UserController {
       return response.status(400).json({ message: "failed" });
     }
   }
+  async getDetailUser({ auth, params, response }) {
+    const currentUser = await auth.getUser();
+    const detailUser = await User.find(params.id);
+    if (currentUser.role === "admin") {
+      return response
+        .status(200)
+        .json({ message: "success", data: detailUser });
+    }
+    return response.status(400).json({ message: "failed, you are not authorized!" });
+  }
+  
   async login({ request, auth, response }) {
     const payload = request.only(["uid", "password"]);
     const user = await Persona.verify(payload);

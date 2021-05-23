@@ -46,7 +46,7 @@ Route.group(() => {
   Route.get("/order/:id", "CustomerController.detailOrder");
   Route.get("/partners", "UserController.getAllPartner")
   Route.get("/users", "UserController.getAllUser")
-  Route.get("/user/:id", "AdminController.getDetailUser")
+  Route.get("/user/:id", "UserController.getDetailUser")
   
 })
   .middleware(["auth", "rbac:admin"])
