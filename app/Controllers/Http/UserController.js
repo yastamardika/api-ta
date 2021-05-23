@@ -7,7 +7,7 @@ const Persona = use("Persona");
 const SanggarAddress = use("App/Models/AddressSanggar");
 const Sanggar = use("App/Models/Sanggar");
 const Database = use("Database");
-const Cloudinary = use('App/Services/Cloudinary');
+const Cloudinary = use("App/Services/Cloudinary");
 const Helpers = use("Helpers");
 
 class UserController {
@@ -28,6 +28,7 @@ class UserController {
   async verifyPartner({ auth, params, response }) {
     const currentUser = await auth.getUser();
     const time = new Date();
+    
     if (currentUser.role === "admin") {
       const toBePartner = await User.query()
         .where("id", params.id)
@@ -39,17 +40,23 @@ class UserController {
       return response.status(400).json({ message: "failed" });
     }
   }
+
   async getDetailUser({ auth, params, response }) {
     const currentUser = await auth.getUser();
-    const detailUser = await User.find(params.id);
+    const detailUser = await UserUser.query()
+      .where("id", params.id)
+      .with("sanggar")
+      .fetch();
     if (currentUser.role === "admin") {
       return response
         .status(200)
         .json({ message: "success", data: detailUser });
     }
-    return response.status(400).json({ message: "failed, you are not authorized!" });
+    return response
+      .status(400)
+      .json({ message: "failed, you are not authorized!" });
   }
-  
+
   async login({ request, auth, response }) {
     const payload = request.only(["uid", "password"]);
     const user = await Persona.verify(payload);
@@ -78,11 +85,11 @@ class UserController {
     return await auth.generate(user);
   }
 
-  async verifyEmail({ request, params, session, response }) {
+  async verifyEmail({ request, params, session, response, view}) {
     const token = request.input("token");
     const user = await Persona.verifyEmail(token);
     session.flash({ message: "Email verified" });
-    return view.render('verified');
+    return view.render("verified");
   }
 
   async partnerRegistration({ auth, request, response }) {
@@ -126,7 +133,10 @@ class UserController {
     ]);
 
     try {
-      const cloudinaryResponse = await Cloudinary.v2.uploader.upload(Helpers.tmpPath("uploads/"+imgName), {folder: 'sanggar'});
+      const cloudinaryResponse = await Cloudinary.v2.uploader.upload(
+        Helpers.tmpPath("uploads/" + imgName),
+        { folder: "sanggar" }
+      );
       // console.log(cloudinaryResponse)
       const address = await SanggarAddress.create({
         address: addressInfo.address,
@@ -145,7 +155,7 @@ class UserController {
         (sanggar.phone = userInfo.phone),
         (sanggar.email = userInfo.email),
         // (sanggar.photo = cloudinaryResponse.secure_url), //cloudinary secure_url via nuxt-module
-        (sanggar.photo = userInfo.photo)
+        (sanggar.photo = userInfo.photo);
       sanggar.partnerId = user.id;
       sanggar.sanggar_addressId = address.id;
 
