@@ -104,19 +104,19 @@ class UserController {
         .status(400)
         .json({ message: "failed, you already registering partner form" });
     }
-    const imageSanggar = request.file("photo", {
-      types: ["image"],
-      size: "2mb",
-    });
-    const imgName = `${new Date().getTime()}.${imageSanggar.subtype}`;
-    await imageSanggar.move(Helpers.tmpPath("uploads"), {
-      name: imgName,
-      overwrite: true,
-    });
-    if (!imageSanggar.moved()) {
-      response.badRequest(imageSanggar.errors());
-      return response.json({ message: imageSanggar.errors() });
-    }
+    // const imageSanggar = request.file("photo", {
+    //   types: ["image"],
+    //   size: "2mb",
+    // });
+    // const imgName = `${new Date().getTime()}.${imageSanggar.subtype}`;
+    // await imageSanggar.move(Helpers.tmpPath("uploads"), {
+    //   name: imgName,
+    //   overwrite: true,
+    // });
+    // if (!imageSanggar.moved()) {
+    //   response.badRequest(imageSanggar.errors());
+    //   return response.json({ message: imageSanggar.errors() });
+    // }
     const userInfo = request.only([
       "name",
       "description",
