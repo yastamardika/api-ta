@@ -45,7 +45,7 @@ class User extends Model {
   }
   
   sanggar() {
-    return this.hasMany("App/Models/Sanggar", "id", "partnerId");
+    return this.hasOne("App/Models/Sanggar", "id", "partnerId");
   }
 }
 

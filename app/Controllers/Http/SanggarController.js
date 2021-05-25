@@ -7,14 +7,6 @@ const Midtrans = use("Midtrans");
 class SanggarController {
   async index({ response }) {
     try {
-      const sanggar = await Sanggar.query()
-        .whereHas("user", (builder) => {
-          builder.where("role", "partner");
-        })
-        .with("address")
-        .with("user")
-        .whereNull("deleted_at")
-        .fetch();
       const user = await User.query()
         .where("role", "partner")
         .with("sanggar")
@@ -22,7 +14,7 @@ class SanggarController {
         .fetch();
       response
         .status(200)
-        .json({ messages: "Success", data: sanggar, user: user });
+        .json({ messages: "success", data: user });
     } catch (err) {
       response.status(500).json({ messages: "error" });
     }
