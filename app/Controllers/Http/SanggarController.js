@@ -1,10 +1,10 @@
 "use strict";
+const User = use("App/Models/User");
 const Sanggar = use("App/Models/Sanggar");
 const DancePackage = use("App/Models/DancePackage");
 const Order = use("App/Models/Order");
 const Midtrans = use("Midtrans");
 class SanggarController {
-  
   async index({ response }) {
     try {
       const sanggar = await Sanggar.query()
@@ -15,7 +15,14 @@ class SanggarController {
         .with("user")
         .whereNull("deleted_at")
         .fetch();
-      response.status(200).json({ messages: "Success", data: sanggar });
+      const user = await User.query()
+        .where("role", "partner")
+        .with("sanggar")
+        .whereNull("deleted_at")
+        .fetch();
+      response
+        .status(200)
+        .json({ messages: "Success", data: sanggar, user: user });
     } catch (err) {
       response.status(500).json({ messages: "error" });
     }
@@ -41,8 +48,8 @@ class SanggarController {
       const data = request.all();
       const partner = await Sanggar.find(params.sanggarId);
       if (user.id == partner.partnerId) {
-        await Sanggar.query().where('id', params.sanggarId).update(data);
-        return response.status(200).json({ status: 200, message: "success!"  });
+        await Sanggar.query().where("id", params.sanggarId).update(data);
+        return response.status(200).json({ status: 200, message: "success!" });
       }
       return response
         .status(400)
