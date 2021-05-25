@@ -8,6 +8,7 @@ class OrderSchema extends Schema {
     this.create('orders', (table) => {
       table.increments()
       table.date('order_date')
+      table.string('fund_status')
       table.timestamps()
     })
   }

@@ -10,7 +10,9 @@ class SanggarController {
       const user = await User.query()
         .where("role", "partner")
         .with("sanggar")
+        .with("sanggar.address")
         .whereNull("deleted_at")
+        .whereHas()
         .fetch();
       response
         .status(200)
