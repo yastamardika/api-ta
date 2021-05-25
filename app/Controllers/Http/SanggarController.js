@@ -4,9 +4,10 @@ const DancePackage = use("App/Models/DancePackage");
 const Order = use("App/Models/Order");
 const Midtrans = use("Midtrans");
 class SanggarController {
+  
   async index({ response }) {
     try {
-      const address = await Sanggar.query()
+      const sanggar = await Sanggar.query()
         .whereHas("user", (builder) => {
           builder.where("role", "partner");
         })
@@ -14,7 +15,7 @@ class SanggarController {
         .with("user")
         .whereNull("deleted_at")
         .fetch();
-      response.status(200).json({ messages: "Success", data: address });
+      response.status(200).json({ messages: "Success", data: sanggar });
     } catch (err) {
       response.status(500).json({ messages: "error" });
     }
