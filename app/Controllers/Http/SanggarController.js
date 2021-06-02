@@ -12,11 +12,6 @@ class SanggarController {
         .with("sanggar.address")
         .whereNull("deleted_at")
         .fetch();
-        // const user = await User.query()
-        // .where("role", "partner")
-        // .with("sanggar.address")
-        // .whereNull("deleted_at")
-        // .fetch();
       response
         .status(200)
         .json({ messages: "success", data: user });
