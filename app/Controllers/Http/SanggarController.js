@@ -40,8 +40,8 @@ class SanggarController {
       const data = request.all();
       const partner = await Sanggar.find(params.sanggarId);
       if (user.id == partner.partnerId) {
-        await Sanggar.query().where('id', params.sanggarId).update(data);
-        return response.status(200).json({ status: 200, message: "success!"  });
+        await Sanggar.query().where("id", params.sanggarId).update(data);
+        return response.status(200).json({ status: 200, message: "success!" });
       }
       return response
         .status(400)
@@ -125,7 +125,7 @@ class SanggarController {
     }
   }
 
-  async indexDancePackage({ auth, params, response }) {
+  async indexDancePackage({ params, response }) {
     try {
       const dancePackage = await DancePackage.query()
         .where("sanggarId", params.sanggarId)
@@ -159,7 +159,24 @@ class SanggarController {
     }
   }
 
-  async editDancePackage({ auth, request, response }) {}
+  async editDancePackage({ auth, params, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const data = request.all();
+      const partner = await Sanggar.find(params.sanggarId);
+      if (user.id == partner.partnerId) {
+        await DancePackage.query()
+          .where("id", params.dancePackageId)
+          .update(data);
+        return response.status(200).json({ status: 200, message: "success!" });
+      }
+      return response
+        .status(400)
+        .json({ message: "Failed!, unauthorized user!" });
+    } catch (e) {
+      response.status(500).json({ status: 400, message: "An error occured!" });
+    }
+  }
 
   async detailDancePackage({ params, response }) {
     try {
@@ -167,6 +184,36 @@ class SanggarController {
       response.status(201).json({ message: "Success", data: dancePackage });
     } catch (err) {
       response.status(500).json({ message: err });
+    }
+  }
+
+  async indexOrderPartner({ auth, response }) {
+    try {
+      const currentUser = await auth.getUser();
+      const sanggar = Sanggar.query()
+        .where("partnerId", currentUser.id)
+        .fetch();
+      const order = Order.query().where("sanggarId", sanggar.id).fetch();
+      response.status(200).json({ message: "success!", data: order });
+    } catch (error) {
+      response.status(500).json({ message: error });
+    }
+  }
+
+  async detailOrderPartner({ auth, params, response }) {
+    try {
+      const currentUser = await auth.getUser();
+      const sanggar = Sanggar.query()
+        .where("partnerId", currentUser.id)
+        .fetch();
+      if (sanggar.id === params.sanggarId) {
+        const order = Order.query().where("id", params.orderId).fetch();
+        response.status(200).json({ message: "success!", data: order });
+      } else {
+        response.status(404).json({ message: "Order not found!" });
+      }
+    } catch (error) {
+      response.status(500).json({ message: error });
     }
   }
 }
