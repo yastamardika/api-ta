@@ -25,38 +25,6 @@ class UserController {
     return currentUser;
   }
 
-  async verifyPartner({ auth, params, response }) {
-    const currentUser = await auth.getUser();
-    const time = new Date();
-    
-    if (currentUser.role === "admin") {
-      const toBePartner = await User.query()
-        .where("id", params.id)
-        .update({ role: "partner", verified_by_admin_at: time });
-      return response
-        .status(200)
-        .json({ message: "success", data: toBePartner });
-    } else {
-      return response.status(400).json({ message: "failed" });
-    }
-  }
-
-  async getDetailUser({ auth, params, response }) {
-    const currentUser = await auth.getUser();
-    const detailUser = await User.query()
-      .where("id", params.id)
-      .with("sanggar")
-      .fetch();
-    if (currentUser.role === "admin") {
-      return response
-        .status(200)
-        .json({ message: "success", data: detailUser });
-    }
-    return response
-      .status(400)
-      .json({ message: "failed, you are not authorized!" });
-  }
-
   async login({ request, auth, response }) {
     const payload = request.only(["uid", "password"]);
     const user = await Persona.verify(payload);
@@ -92,6 +60,17 @@ class UserController {
     return view.render("verified");
   }
 
+  async updatePassword({ auth, request, response  }) {
+    const payload = request.only([
+      "old_password",
+      "password",
+      "password_confirmation",
+    ]);
+    const user = await auth.getUser();
+    const updatedUser = await Persona.updatePassword(user, payload);
+    return response.json({ data: updatedUser }) ;
+  }
+  
   async partnerRegistration({ auth, request, response }) {
     const trx = await Database.beginTransaction();
     const user = await auth.getUser();
@@ -197,6 +176,21 @@ class UserController {
     return response
       .status(404)
       .json({ message: "failed", data: "Unauthorized User!" });
+  }
+
+  async verifyPartner({ auth, params, response }) {
+    const currentUser = await auth.getUser();
+    const time = new Date();
+    if (currentUser.role === "admin") {
+      const toBePartner = await User.query()
+        .where("id", params.id)
+        .update({ role: "partner", verified_by_admin_at: time });
+      return response
+        .status(200)
+        .json({ message: "success", data: toBePartner });
+    } else {
+      return response.status(400).json({ message: "failed" });
+    }
   }
 }
 

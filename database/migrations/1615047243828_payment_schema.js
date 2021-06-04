@@ -8,7 +8,7 @@ class PaymentSchema extends Schema {
     this.create('payments', (table) => {
       table.increments()
       table.string('total_amount')
-      // table.string('payment_method')
+      // table.string('payment_method') don't need method if we already used midtrans
 
       table.timestamps()
     })
