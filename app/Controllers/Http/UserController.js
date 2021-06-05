@@ -68,7 +68,7 @@ class UserController {
     ]);
     const user = await auth.getUser();
     const updatedUser = await Persona.updatePassword(user, payload);
-    return response.json({ data: updatedUser }) ;
+    return response.json({ message:"success!", data: updatedUser }) ;
   }
   
   async partnerRegistration({ auth, request, response }) {
