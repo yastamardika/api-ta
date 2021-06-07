@@ -8,7 +8,7 @@ const Persona = use("Persona");
 class AdminController {
   async indexOrderAdmin({ response }) {
     try {
-      const order = Order.query()
+      const order = await Order.query()
         .with("customer")
         .with("package")
         .with("detail")
