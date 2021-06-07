@@ -25,7 +25,7 @@ class AdminController {
 
   async detailOrderAdmin({ params, response }) {
     try {
-      const order = Order.query()
+      const order = await Order.query()
         .where("id", params.orderId)
         .with("customer")
         .with("package")
