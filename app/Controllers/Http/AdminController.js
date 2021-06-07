@@ -1,7 +1,8 @@
 "use strict";
 
 const User = use("App/Models/User");
-const Database = use("Database");
+const Order = use("App/Models/Order");
+const Database = use('Database')
 const Persona = use("Persona");
 
 class AdminController {
