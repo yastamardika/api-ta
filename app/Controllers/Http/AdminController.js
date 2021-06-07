@@ -40,6 +40,7 @@ class AdminController {
       response.status(500).json({ message: error });
     }
   }
+  
   async getDetailUser({ auth, params, response }) {
     const currentUser = await auth.getUser();
     const detailUser = await User.find(params.id);
@@ -53,3 +54,7 @@ class AdminController {
       .json({ message: "failed, you are not authorized!" });
   }
 }
+}
+
+
+module.exports = AdminController;
