@@ -43,8 +43,8 @@ Route.group(() => {
 
 Route.group(() => {
   Route.post("/verify-partner/:id", "UserController.verifyPartner");
-  Route.get("/order", "CustomerController.indexOrder");
-  Route.get("/order/:orderId", "CustomerController.detailOrder");
+  Route.get("/order", "AdminController.indexOrderAdmin");
+  Route.get("/order/:orderId", "AdminController.detailOrderAdmin");
   Route.get("/partners", "UserController.getAllPartner")
   Route.get("/users", "UserController.getAllUser")
   Route.get("/user/:id", "AdminController.getDetailUser")
