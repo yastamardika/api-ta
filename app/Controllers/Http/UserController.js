@@ -28,10 +28,8 @@ class UserController {
   async login({ request, auth, response }) {
     const payload = request.only(["uid", "password"]);
     const user = await Persona.verify(payload);
-
-    const data = await auth.generate(user);
-
-    return response.json({ message: data });
+    
+    return await auth.generate(user);
   }
 
   async logout({ auth, response }) {
