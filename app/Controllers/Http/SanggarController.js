@@ -11,6 +11,7 @@ class SanggarController {
         .where("role", "partner")
         .with("sanggar.address")
         .whereNull("deleted_at")
+        .whereNotNull("sanggar.packages")
         .fetch();
       response
         .status(200)
