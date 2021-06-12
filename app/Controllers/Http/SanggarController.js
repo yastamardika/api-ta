@@ -10,14 +10,16 @@ class SanggarController {
       const user = await User.query()
         .where("role", "partner")
         .with("sanggar.address")
+        .with("sanggar",(builder) =>{
+          builder.whereNotNull('packages')
+        })
         .whereNull("deleted_at")
-        .whereNotNull("sanggar.packages")
         .fetch();
       response
         .status(200)
         .json({ messages: "success", data: user });
     } catch (err) {
-      response.status(500).json({ messages: "error" });
+      response.status(500).json({ messages: "error", error : err });
     }
   }
 
