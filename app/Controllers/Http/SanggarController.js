@@ -11,9 +11,9 @@ class SanggarController {
         .where("role", "partner")
         .with("sanggar.address")
         .with("sanggar",(builder) =>{
-          builder.whereNotNull('packages')
+          builder.has('packages')
         })
-        .whereNull("deleted_at")
+        // .whereNull("deleted_at")
         .fetch();
       response
         .status(200)
