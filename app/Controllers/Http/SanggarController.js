@@ -181,6 +181,23 @@ class SanggarController {
     }
   }
 
+  async deleteDancePackage({ auth, params, response }) {
+    try {
+      const user = await auth.getUser();
+      const sanggar = await Sanggar.find(params.sanggarId);
+      const dancePackage = await DancePackage.find(params.dancePackageId)
+      if (user.id == sanggar.partnerId) {
+        dancePackage.update({ deleted_at: new Date() });
+        return response.status(200).json({ message: "Success", data: sanggar });
+      }
+      return response
+        .status(400)
+        .json({ message: "Failed!, unauthorized user!" });
+    } catch (error) {
+      response.status(500).json({ message: error });
+    }
+  }
+
   async detailDancePackage({ params, response }) {
     try {
       const dancePackage = await DancePackage.find(params.dancePackageId);
