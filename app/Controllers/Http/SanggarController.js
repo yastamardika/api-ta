@@ -158,7 +158,7 @@ class SanggarController {
         .status(400)
         .json({ message: "Failed!, unauthorized user!" });
     } catch (error) {
-      return response.status(400).json({ message: "Failed!, error occured" });
+      return response.status(400).json({ message: "Failed!",error: error  });
     }
   }
 
