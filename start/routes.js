@@ -54,12 +54,13 @@ Route.group(() => {
   .prefix("api/");
 
 Route.group(() => {
-  Route.get("/dance-package/:dancePackageId/", "SanggarController.detailDancePackage");
   Route.get("/dance-package", "SanggarController.indexDancePackage");
   Route.get("/order", "SanggarController.indexOrderPartner");
   Route.get("/order/:orderId", "SanggarController.detailOrderPartner");
   Route.post("/dance-package/create", "SanggarController.createDancePackage");
+  Route.get("/dance-package/:dancePackageId/", "SanggarController.detailDancePackage");
   Route.patch("/dance-package/:dancePackageId/edit", "SanggarController.editDancePackage");
+  Route.get("/dance-package/:dancePackageId/delete", "SanggarController.deleteDancePackage");
 })
   .middleware(["auth", "rbac:partner"])
   .prefix("api/sanggar/:sanggarId/");
