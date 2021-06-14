@@ -45,22 +45,22 @@ class CustomerController {
       });
       await venue.save(trx);
       const paymentInfo = request.only(["total_amount", "payment_method"]);
+      const paket = await DancePackage.findOrFail(request.input("packageId"));
       const payment = await Payment.create({
-        total_amount: paymentInfo.total_amount,
+        total_amount: paket.harga,
         payment_method: paymentInfo.payment_method,
       });
       (payment.payment_statusId = 1), await payment.save(trx);
-      const paket = await DancePackage.findOrFail(request.input("packageId"));
       const date = new Date();
       const order = new Order();
+      (order.sanggarId = params.sanggarId),
       (order.order_date = date),
         (order.packageId = paket.id),
         (order.order_detailId = detailOrder.id),
         (order.userId = currentUser.id),
         (order.paymentId = payment.id),
         (order.order_statusId = 1),
-        (order.venueId = venue.id),
-        (order.sanggarId = params.sanggarId);
+        (order.venueId = venue.id);
 
       await order.save(trx);
 
