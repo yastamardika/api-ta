@@ -41,26 +41,27 @@ Route.group(() => {
   .middleware(["auth"])
   .prefix("api/");
 
-Route.group(() => {
-  Route.post("/verify-partner/:id", "UserController.verifyPartner");
-  Route.get("/admin/order", "AdminController.indexOrderAdmin");
-  Route.get("/admin/order/:orderId", "AdminController.detailOrderAdmin");
-  Route.get("/partners", "UserController.getAllPartner")
-  Route.get("/users", "UserController.getAllUser")
-  Route.get("/user/:id", "AdminController.getDetailUser")
   
-})
-  .middleware(["auth", "rbac:admin"])
-  .prefix("api/");
-
-Route.group(() => {
-  Route.get("/dance-package", "SanggarController.indexDancePackage");
-  Route.get("/order", "SanggarController.indexOrderPartner");
-  Route.get("/order/:orderId", "SanggarController.detailOrderPartner");
-  Route.post("/dance-package/create", "SanggarController.createDancePackage");
-  Route.get("/dance-package/:dancePackageId/", "SanggarController.detailDancePackage");
-  Route.patch("/dance-package/:dancePackageId/edit", "SanggarController.editDancePackage");
-  Route.get("/dance-package/:dancePackageId/delete", "SanggarController.deleteDancePackage");
-})
+  Route.group(() => {
+    Route.get("/dance-package", "SanggarController.indexDancePackage");
+    Route.get("/order", "SanggarController.indexOrderPartner");
+    Route.get("/order/:orderId", "SanggarController.detailOrderPartner");
+    Route.post("/dance-package/create", "SanggarController.createDancePackage");
+    Route.get("/dance-package/:dancePackageId/", "SanggarController.detailDancePackage");
+    Route.patch("/dance-package/:dancePackageId/edit", "SanggarController.editDancePackage");
+    Route.get("/dance-package/:dancePackageId/delete", "SanggarController.deleteDancePackage");
+  })
   .middleware(["auth", "rbac:partner"])
   .prefix("api/sanggar/:sanggarId/");
+  
+  Route.group(() => {
+    Route.post("/verify-partner/:id", "UserController.verifyPartner");
+    Route.get("/admin/order", "AdminController.indexOrderAdmin");
+    Route.get("/admin/order/:orderId", "AdminController.detailOrderAdmin");
+    Route.get("/partners", "UserController.getAllPartner")
+    Route.get("/users", "UserController.getAllUser")
+    Route.get("/user/:id", "AdminController.getDetailUser")
+    
+  })
+    .middleware(["auth", "rbac:admin"])
+    .prefix("api/");
