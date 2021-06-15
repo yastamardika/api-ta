@@ -9,9 +9,8 @@ class SanggarController {
     try {
       const user = await User.query()
         .where("role", "partner")
-        .has("sanggar",(builder) =>{
-          builder.has('packages')
-        })
+        .has("sanggar")
+        .has("sanggar.packages")
         .with("sanggar.address")
         .whereNull("deleted_at")
         .fetch();
