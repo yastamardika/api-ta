@@ -9,11 +9,12 @@ class SanggarController {
     try {
       const user = await User.query()
         .where("role", "partner")
+        .has("sanggar")
         .with("sanggar.address")
         .with("sanggar",(builder) =>{
           builder.has('packages')
         })
-        // .whereNull("deleted_at")
+        .whereNull("deleted_at")
         .fetch();
       response
         .status(200)
