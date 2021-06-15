@@ -69,6 +69,17 @@ class UserController {
     return response.json({ message:"success!", data: updatedUser }) ;
   }
   
+  async forgotPassword({ request }) {
+    return await Persona.forgotPassword(request.input("uid"));
+  }
+
+  async updatePasswordByToken({ request }) {
+    const token = decodeURIComponent(request.input("token"));
+    const payload = request.only(["password", "password_confirmation"]);
+    const user = await Persona.updatePasswordByToken(token, payload);
+    return user;
+  }
+  
   async partnerRegistration({ auth, request, response }) {
     const trx = await Database.beginTransaction();
     const user = await auth.getUser();
