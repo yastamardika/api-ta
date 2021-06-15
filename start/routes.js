@@ -20,6 +20,8 @@ Route.get("/", "SanggarController.index");
 Route.group(() => {
   Route.post("/auth/login", "UserController.login");
   Route.post("/auth/register", "UserController.register");
+  Route.post("/update/password-by-token","UserController.updatePasswordByToken");
+  Route.get("/forgot/password", "UserController.forgotPassword");
   Route.get("/sanggar", "SanggarController.index");
   Route.get("/sanggar/:id", "SanggarController.detail");
   Route.get("/auth/user", "UserController.getCurrentUser");
