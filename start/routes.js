@@ -16,6 +16,7 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use("Route");
 
+Route.on('/checkmail').render('mail.user')
 Route.get("/", "SanggarController.index");
 Route.group(() => {
   Route.post("/auth/login", "UserController.login");

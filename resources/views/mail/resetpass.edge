@@ -1,19 +1,143 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <title>Password Reset Request</title>
-</head>
-<body>
-  <section>
-      <p>Password Reset Request</p>
-      <p>
-        Hi, {{ user.full_name }}.
-      </p>
-      <p>
-        This email was sent because you requested a password reset. Please follow the link below to reset your password.
-      </p>
-      <a href="http://localhost:3000/users/password-reset?{{token}}">Reset Your Password</a>
-  </section>
-</body>
+  <head>
+    <meta charset="UTF-8" />
+    <title>New User Registration</title>
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,300;0,400;0,600;0,700;1,300&display=swap"
+      rel="stylesheet"
+    />
+  </head>
+  <style>
+    html {
+      font-family: "Poppins", sans-serif;
+    }
+    body {
+      background-image: url("https://res.cloudinary.com/i-tallenta/image/upload/v1621326779/static/bg_xji8b6.png");
+      background-attachment: scroll;
+      background-clip: border-box;
+      background-size: 100% 100vh;
+      background-blend-mode: color;
+      background-position-x: right;
+      background-repeat: no-repeat;
+      font-weight: 500;
+    }
+    div {
+      background: rgba(255, 255, 255, 0.8);
+      box-shadow: 0px 0px 24px 4px rgba(255, 255, 255, 0.6);
+      border-radius: 4px;
+    }
+    
+    .btn{
+      background-color: cadetblue;
+      border-radius: 4px;
+      margin-bottom: 10%;
+      padding: 10px;
+      text-decoration: none;
+      color: white;
+    }
+
+    .btn:hover{
+      background-color: rgb(80, 138, 139);
+      box-shadow: 0px 0px 24px 2px rgba(0, 0, 0, 0.16);
+    }
+
+    .btn:active{
+      box-shadow: 0px 0px 14px 2px rgba(134, 134, 134, 0.08);
+    }
+
+    hr{
+      margin-top: 32px;
+      border-top: 0.6px solid rgb(255, 255, 255);
+    }
+    /*------------------------------------------
+  Responsive Grid Media Queries - 1280, 1024, 768, 480
+   1280-1024   - desktop (default grid)
+   1024-768    - tablet landscape
+   768-480     - tablet 
+   480-less    - phone landscape & smaller
+  --------------------------------------------*/
+    @media all and (min-width: 1024px) {
+      body {
+        font-size: 24px;
+        margin: 5vh 24vw;
+        padding: 5vh 5vh;
+      }
+      div {
+        padding: 0.4vh 5vw 5vh 5vw;
+      }
+      img {
+        max-width: 10vw;
+        margin-bottom: 10px;
+      }
+    }
+
+    @media all and (min-width: 768px) and (max-width: 1024px) {
+      body {
+        font-size: calc(16px + 10 * ((100vw - 768px) / 256));
+        margin: 1vh 1vh;
+        padding: 5vh;
+      }
+      div {
+        padding: 0.4vh 3vw 5vh 3vw;
+      }
+
+      img {
+        max-width: 20vw;
+        margin-bottom: 10px;
+      }
+    }
+
+    @media all and (min-width: 480px) and (max-width: 768px) {
+      body {
+        font-size: calc(16px + 10 * ((100vw - 480px) / 288));
+        margin: 1vh 1vh;
+        padding: 5vh;
+      }
+      div {
+        padding: 5vw;
+      }
+      img {
+        max-width: 30vw;
+        margin-bottom: 10px;
+      }
+    }
+
+    @media all and (max-width: 480px) {
+      body {
+        font-size: calc(16px + 10 * ((100vw - 200px) / 280));
+        margin: 1vh 3vh;
+        padding: 5vh;
+      }
+      div {
+        padding: 5vw;
+      }
+      
+      img {
+        margin-bottom: 10px;
+        max-width: 50vw;
+      }
+    }
+  </style>
+  <body>
+    <section>
+      <img
+        src="https://res.cloudinary.com/i-tallenta/image/upload/v1621506239/static/logo_dark_jgc2y2.png"
+      />
+      <div>
+        <h2>Password Reset Request</h2>
+        <p> Hi, {{ user.username }}.</p>
+        <p>
+          This email was sent because you requested a password reset. Please follow the link below to reset your password.
+        </p>
+        <a class="btn" href="http://localhost:3000/users/password-reset?{{token}}"
+          >Reset Your Password</a
+        >
+      </div>
+      <hr>
+      <p style="font-size: small;">Copyright, 2021 I-Tallenta</p>
+
+    </section>
+  </body>
 </html>
