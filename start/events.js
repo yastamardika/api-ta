@@ -24,7 +24,7 @@ Event.on("forgot::password", async (payload) => {
     token: payload.token,
   });
 
-  await Mail.send("mail.reset-password", { host, token, user }, (message) => {
+  await Mail.send("mail.resetpass", { token, user }, (message) => {
     message
       .to(payload.user.email)
       .from(`<${Env.get("MAIL_USERNAME")}>`)
