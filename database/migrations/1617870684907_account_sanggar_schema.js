@@ -21,9 +21,6 @@ class AccountSanggarSchema extends Schema {
     this.table("orders", (table) => {
       table.datetime("deleted_at");
     })
-    this.table("payments", (table) => {
-      table.datetime("deleted_at");
-    })
   }
 
   down() {

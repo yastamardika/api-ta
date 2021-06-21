@@ -29,14 +29,6 @@ class RelationshipSchema extends Schema {
         .references("id")
         .inTable("categories");
     });
-    this.table("payments", (table) => {
-      table
-        .integer("payment_statusId")
-        .unsigned()
-        .references("id")
-        .inTable("payment_statuses");
-      table.integer("orderId").unsigned().references("id").inTable("orders");
-    });
     this.table("orders", (table) => {
       table
         .integer("packageId")
@@ -49,11 +41,6 @@ class RelationshipSchema extends Schema {
         .references("id")
         .inTable("order_details");
       table.integer("userId").unsigned().references("id").inTable("users");
-      table
-        .integer("paymentId")
-        .unsigned()
-        .references("id")
-        .inTable("payments");
       table
         .integer("order_statusId")
         .unsigned()
