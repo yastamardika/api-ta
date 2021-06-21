@@ -4,11 +4,10 @@ const Order = use("App/Models/Order");
 const DetailVenue = use("App/Models/DetailVenue");
 const OrderDetail = use("App/Models/OrderDetail");
 const DancePackage = use("App/Models/DancePackage");
-
+const Mail = use('Mail')
 const Midtrans = use("Midtrans");
 const moment = use("moment");
 const Sanggar = use("App/Models/Sanggar");
-const Payment = use("App/Models/Payment");
 const Database = use("Database");
 
 class CustomerController {
@@ -44,13 +43,8 @@ class CustomerController {
         time: venueInfo.venueTime,
       });
       await venue.save(trx);
-      const paymentInfo = request.only(["total_amount", "payment_method"]);
       const paket = await DancePackage.findOrFail(request.input("packageId"));
-      const payment = await Payment.create({
-        total_amount: paket.harga,
-        payment_method: paymentInfo.payment_method,
-      });
-      (payment.payment_statusId = 1), await payment.save(trx);
+
       const date = new Date();
       const order = new Order();
       (order.sanggarId = params.sanggarId),
@@ -58,7 +52,7 @@ class CustomerController {
         (order.packageId = paket.id),
         (order.order_detailId = detailOrder.id),
         (order.userId = currentUser.id),
-        (order.paymentId = payment.id),
+        (order.total_amount = paket.harga),
         (order.order_statusId = 1),
         (order.venueId = venue.id);
 
@@ -103,9 +97,21 @@ class CustomerController {
       console.log(redirect_url);
       await trx.commit();
       // choice one, token or redirect_url
+
+      //send email while success
+    
+      // if (redirect_url != null) {
+      //   Mail.send('emails.welcome', user.toJSON(), (message) => {
+      //     message
+      //       .to(user.email)
+      //       .from('<from-email>')
+      //       .subject('Welcome to yardstick')
+      //   })
+      // }
       return response
-        .status(200)
-        .json({ message: "success", data: redirect_url });
+      .status(200)
+      .json({ message: "success", data: redirect_url });
+     
     } catch (error) {
       await trx.rollback();
       response.status(500).json({ message: "error!", data: error });
