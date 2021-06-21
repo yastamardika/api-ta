@@ -32,4 +32,5 @@ adonis migration:run
 
 ### CI/CD
 .profile
-release: ENV_SILENT=true node ace migration:rollback --force
+release: ENV_SILENT=true node ace migration:run --force
+release: ENV_SILENT=true node ace seed --force
