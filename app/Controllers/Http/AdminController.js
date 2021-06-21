@@ -14,7 +14,6 @@ class AdminController {
         .with("detail")
         .with("venue")
         .with("sanggar")
-        .with("payment")
         .with("status")
         .fetch();
       response.status(200).json({ message: "success!", data: order });
@@ -32,7 +31,6 @@ class AdminController {
         .with("detail")
         .with("venue")
         .with("sanggar")
-        .with("payment")
         .with("status")
         .fetch();
       response.status(200).json({ message: "success!", data: order });
