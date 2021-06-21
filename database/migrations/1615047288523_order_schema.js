@@ -9,6 +9,7 @@ class OrderSchema extends Schema {
       table.increments()
       table.date('order_date')
       table.string('fund_status')
+      table.string('total_amount')
       table.timestamps()
     })
   }
