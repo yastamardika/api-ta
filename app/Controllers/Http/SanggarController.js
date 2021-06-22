@@ -130,7 +130,7 @@ class SanggarController {
   async indexDancePackage({ params, response }) {
     try {
       const dancePackage = await DancePackage.query()
-        .where("sanggarId", params.sanggarId)
+        .where("sanggarId", params.sanggarId).whereNull("deleted_at")
         .fetch();
       response.status(201).json({ message: "Success", data: dancePackage });
     } catch (err) {
