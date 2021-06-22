@@ -54,7 +54,7 @@ Route.group(() => {
     Route.post("/dance-package/create", "SanggarController.createDancePackage");
     Route.get("/dance-package/:dancePackageId/", "SanggarController.detailDancePackage");
     Route.patch("/dance-package/:dancePackageId/edit", "SanggarController.editDancePackage");
-    Route.get("/dance-package/:dancePackageId/delete", "SanggarController.deleteDancePackage");
+    Route.put("/dance-package/:dancePackageId/delete", "SanggarController.deleteDancePackage");
   })
   .middleware(["auth", "rbac:partner"])
   .prefix("api/sanggar/:sanggarId/");
