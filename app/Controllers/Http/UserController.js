@@ -111,6 +111,7 @@ class UserController {
       "phone",
       "email",
       "photo",
+      "youtube_video_profile"
     ]);
     const addressInfo = request.only([
       "address",
@@ -142,6 +143,7 @@ class UserController {
         (sanggar.description = userInfo.description),
         (sanggar.phone = userInfo.phone),
         (sanggar.email = userInfo.email),
+        (sanggar.youtube_video_profile = userInfo.youtube_video_profile)
         // (sanggar.photo = cloudinaryResponse.secure_url), //cloudinary secure_url via nuxt-module
         (sanggar.photo = userInfo.photo);
       sanggar.partnerId = user.id;
