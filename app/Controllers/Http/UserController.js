@@ -40,6 +40,27 @@ class UserController {
     return response.status(200).json({ message: "Success!", data: user });
   }
 
+  async editUsername({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const data = request.all();
+      await User.query().where("id", user.id).update(data);
+      return response.status(200).json({ message: "success!" });
+    } catch (e) {
+      response.status(500).json({ message: "An error occured!" });
+    }
+  }
+
+  async editProfilePhoto({ auth, request, response }) {
+    try {
+      const user = await auth.getUser();
+      const data = request.all();
+      await User.query().where("id", user.id).update(data);
+      return response.status(200).json({ message: "success!" });
+    } catch (e) {
+      response.status(500).json({ message: "An error occured!" });
+    }
+  }
   async register({ request, auth, response }) {
     const payload = request.only([
       "username",

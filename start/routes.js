@@ -38,7 +38,9 @@ Route.group(() => {
   Route.post("/sanggar/order", "SanggarController.charge");
   Route.post("/partner-registration", "UserController.partnerRegistration");
   Route.put("/sanggar/:sanggarId/delete", "SanggarController.deleteSanggar");
-  Route.patch("/profile/change-password", "UserController.updatePassword")
+  Route.patch("/profile/change-password", "UserController.updatePassword");
+  Route.patch("/profile/change-username", "UserController.editUsername");
+  Route.patch("/profile/change-profile-photo", "UserController.editProfilePhoto");
   Route.patch("/sanggar/:sanggarId/edit", "SanggarController.editSanggar");
 })
   .middleware(["auth"])
