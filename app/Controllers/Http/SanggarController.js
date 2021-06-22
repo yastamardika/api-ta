@@ -186,7 +186,7 @@ class SanggarController {
       const sanggar = await Sanggar.find(params.sanggarId);
       const dancePackage = await DancePackage.find(params.dancePackageId)
       if (user.id == sanggar.partnerId) {
-        dancePackage.update({ deleted_at: new Date() });
+        dancePackage.query().update({ deleted_at: new Date() });
         return response.status(200).json({ message: "Success", data: sanggar });
       }
       return response
