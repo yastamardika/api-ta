@@ -31,8 +31,8 @@ Route.group(() => {
 }).prefix("/api");
 
 Route.group(() => {
-  Route.get("/order", "CustomerController.indexOrder"); //daftar order yang dilakukan customer
-  Route.get("/order/:id", "CustomerController.detailOrder"); //detail order yang dilakukan customer
+  Route.get("/order", "CustomerController.indexOrderCustomer"); //daftar order yang dilakukan customer
+  Route.get("/order/:id", "CustomerController.detailOrderCustomer"); //detail order yang dilakukan customer
   Route.post("/auth/logout", "UserController.logout"); 
   Route.post("sanggar/:sanggarId/order", "CustomerController.createOrder");
   Route.post("/sanggar/order", "SanggarController.charge");
@@ -45,7 +45,6 @@ Route.group(() => {
 })
   .middleware(["auth"])
   .prefix("api/");
-
   
   Route.group(() => {
     Route.get("/dance-package", "SanggarController.indexDancePackage");

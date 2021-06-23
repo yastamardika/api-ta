@@ -4,18 +4,35 @@ const Order = use("App/Models/Order");
 const DetailVenue = use("App/Models/DetailVenue");
 const OrderDetail = use("App/Models/OrderDetail");
 const DancePackage = use("App/Models/DancePackage");
-const Mail = use('Mail')
+const Mail = use("Mail");
 const Midtrans = use("Midtrans");
 const moment = use("moment");
 const Sanggar = use("App/Models/Sanggar");
 const Database = use("Database");
 
 class CustomerController {
-  async indexOrder({ auth, response }) {
+  async indexOrderCustomer({ auth, response }) {
     try {
       const currentUser = await auth.getUser();
-      const order = Order.query().where("userId", currentUser.id).fetch();
+      const order = Order.query()
+        .where("userId", currentUser.id)
+        .with(["customer", "package", "detail", "venue", "sanggar", "status"])
+        .fetch();
       response.status(200).json({ message: "success!", data: order });
+    } catch (error) {
+      response.status(500).json({ message: error });
+    }
+  }
+
+  async detailOrderCustomer({ auth, params, response }) {
+    try {
+      const currentUser = await auth.getUser();
+        const order = Order.query()
+          .where("userId", currentUser.id)
+          .where("id", params.orderId)
+          .with(["customer", "package", "detail", "venue", "sanggar", "status"])
+          .fetch();
+        response.status(200).json({ message: "success!", data: order });
     } catch (error) {
       response.status(500).json({ message: error });
     }
@@ -48,7 +65,7 @@ class CustomerController {
       const date = new Date();
       const order = new Order();
       (order.sanggarId = params.sanggarId),
-      (order.order_date = date),
+        (order.order_date = date),
         (order.packageId = paket.id),
         (order.order_detailId = detailOrder.id),
         (order.userId = currentUser.id),
@@ -87,7 +104,7 @@ class CustomerController {
           channel: "migs",
         },
       };
-      console.log(transaction_data)
+      console.log(transaction_data);
       // result: 3bfdd6d4-d757-4b01-a547-fe3b862d1aaa
       const token = await Midtrans.getSnapToken(transaction_data);
       console.log(token);
@@ -99,7 +116,7 @@ class CustomerController {
       // choice one, token or redirect_url
 
       //send email while success
-    
+
       // if (redirect_url != null) {
       //   Mail.send('emails.welcome', user.toJSON(), (message) => {
       //     message
@@ -109,9 +126,8 @@ class CustomerController {
       //   })
       // }
       return response
-      .status(200)
-      .json({ message: "success", data: redirect_url });
-     
+        .status(200)
+        .json({ message: "success", data: redirect_url });
     } catch (error) {
       await trx.rollback();
       response.status(500).json({ message: "error!", data: error });

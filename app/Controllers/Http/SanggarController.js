@@ -14,11 +14,9 @@ class SanggarController {
         .with("sanggar.address")
         .whereNull("deleted_at")
         .fetch();
-      response
-        .status(200)
-        .json({ messages: "success", data: user });
+      response.status(200).json({ messages: "success", data: user });
     } catch (err) {
-      response.status(500).json({ messages: "error", error : err });
+      response.status(500).json({ messages: "error", error: err });
     }
   }
 
@@ -130,7 +128,8 @@ class SanggarController {
   async indexDancePackage({ params, response }) {
     try {
       const dancePackage = await DancePackage.query()
-        .where("sanggarId", params.sanggarId).whereNull("deleted_at")
+        .where("sanggarId", params.sanggarId)
+        .whereNull("deleted_at")
         .fetch();
       response.status(201).json({ message: "Success", data: dancePackage });
     } catch (err) {
@@ -157,7 +156,7 @@ class SanggarController {
         .status(400)
         .json({ message: "Failed!, unauthorized user!" });
     } catch (error) {
-      return response.status(400).json({ message: "Failed!",error: error  });
+      return response.status(400).json({ message: "Failed!", error: error });
     }
   }
 
@@ -185,7 +184,9 @@ class SanggarController {
       const user = await auth.getUser();
       const sanggar = await Sanggar.find(params.sanggarId);
       if (user.id == sanggar.partnerId) {
-        await DancePackage.query().where("id", params.dancePackageId).update({ deleted_at: new Date() });
+        await DancePackage.query()
+          .where("id", params.dancePackageId)
+          .update({ deleted_at: new Date() });
         return response.status(200).json({ message: "Success", data: sanggar });
       }
       return response
@@ -211,7 +212,7 @@ class SanggarController {
       const sanggar = Sanggar.query()
         .where("partnerId", currentUser.id)
         .fetch();
-      const order = Order.query().where("sanggarId", sanggar.id).fetch();
+      const order = Order.query().where("sanggarId", sanggar.id) .with(["customer", "package", "detail", "venue", "sanggar", "status"]).fetch();
       response.status(200).json({ message: "success!", data: order });
     } catch (error) {
       response.status(500).json({ message: error });
@@ -225,7 +226,10 @@ class SanggarController {
         .where("partnerId", currentUser.id)
         .fetch();
       if (sanggar.id === params.sanggarId) {
-        const order = Order.query().where("id", params.orderId).fetch();
+        const order = Order.query()
+          .where("id", params.orderId)
+          .with(["customer", "package", "detail", "venue", "sanggar", "status"])
+          .fetch();
         response.status(200).json({ message: "success!", data: order });
       } else {
         response.status(404).json({ message: "Order not found!" });
