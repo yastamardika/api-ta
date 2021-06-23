@@ -6,11 +6,14 @@ const Order = use("App/Models/Order");
 const Midtrans = use("Midtrans");
 class SanggarController {
   async index({ response }) {
+    // .has("sanggar.packages")
     try {
       const user = await User.query()
         .where("role", "partner")
         .has("sanggar")
-        .has("sanggar.packages")
+        .whereHas('sanggar.packages', (builder) => {
+          builder.whereNull('deleted_at')
+        })
         .with("sanggar.address")
         .whereNull("deleted_at")
         .fetch();
