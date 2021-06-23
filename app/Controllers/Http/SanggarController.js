@@ -27,7 +27,9 @@ class SanggarController {
     try {
       const sanggar = await Sanggar.query()
         .with("address")
-        .with("packages")
+        .with("packages", (builder) => {
+          builder.whereNull('deleted_at')
+        })
         .with("user")
         .where("id", params.id)
         .fetch();
