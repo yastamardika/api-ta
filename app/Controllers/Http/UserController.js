@@ -183,7 +183,7 @@ class UserController {
       await sanggar.address().update({ addressInfo })
       return response.status(200).json({ message:"Success, berhasil merubah data!" })
     } catch (err) {
-      return response.status(400).json({ message: 'Error!', error: err } )
+      return response.status(400).json({ message: 'Error!', err } )
     }
   }
   async getAllPartner({ auth, response }) {
