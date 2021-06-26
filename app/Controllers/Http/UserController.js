@@ -178,17 +178,17 @@ class UserController {
       "postal_code",
       "google_map_link",
     ]);
-    try {
-      await Sanggar.query().where("partnerId", user.id).update(userInfo);
-      await SanggarAddress.query()
-        .where("id", sanggar.sanggar_addressId)
-        .update(addressInfo);
-      return response
-        .status(200)
-        .json({ message: "Success, berhasil merubah data!" });
-    } catch (err) {
-      return response.status(400).json({ message: "Error!", err });
-    }
+    await Sanggar.query().where("partnerId", user.id).update(userInfo);
+    await SanggarAddress.query()
+      .where("id", sanggar.sanggar_addressId)
+      .update(addressInfo);
+    return response
+      .status(200)
+      .json({ message: "Success, berhasil merubah data!" });
+    // try {
+    // } catch (err) {
+    //   return response.status(400).json({ message: "Error!", err });
+    // }
   }
   async getAllPartner({ auth, response }) {
     const currentUser = await auth.getUser();
