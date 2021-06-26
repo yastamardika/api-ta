@@ -178,7 +178,7 @@ class UserController {
       "postal_code",
       "google_map_link",
     ]);
-    await sanggar.update({ userInfo })
+    await sanggar.query().update({ userInfo })
     // await sanggar.address().update({ addressInfo })
     return response.status(200).json({ message:"Success, berhasil merubah data!" })
     // try {
