@@ -181,7 +181,7 @@ class UserController {
     try {
       await Sanggar.query().where("partnerId", user.id).update(userInfo);
       await SanggarAddress.query()
-        .where("id", user.sanggar_addressId)
+        .where("id", sanggar.sanggar_addressId)
         .update(addressInfo);
       return response
         .status(200)
