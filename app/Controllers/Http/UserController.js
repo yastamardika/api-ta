@@ -1,14 +1,10 @@
 "use strict";
 
-const cloudinary = require("../../Services/Cloudinary");
-
 const User = use("App/Models/User");
 const Persona = use("Persona");
 const SanggarAddress = use("App/Models/AddressSanggar");
 const Sanggar = use("App/Models/Sanggar");
 const Database = use("Database");
-const Cloudinary = use("App/Services/Cloudinary");
-const Helpers = use("Helpers");
 
 class UserController {
   async index({ req, res, view }) {
@@ -141,13 +137,12 @@ class UserController {
     await address.save(trx);
     try {
       const sanggar = new Sanggar();
-      (sanggar.name = userInfo.name),
-        (sanggar.description = userInfo.description),
-        (sanggar.phone = userInfo.phone),
-        (sanggar.email = userInfo.email),
-        (sanggar.youtube_video_profile = userInfo.youtube_video_profile)(
-          (sanggar.photo = userInfo.photo)
-        );
+      sanggar.name = userInfo.name;
+      sanggar.description = userInfo.description;
+      sanggar.phone = userInfo.phone;
+      sanggar.email = userInfo.email;
+      sanggar.youtube_video_profile = userInfo.youtube_video_profile;
+      sanggar.photo = userInfo.photo;
       sanggar.partnerId = user.id;
       sanggar.sanggar_addressId = address.id;
 
