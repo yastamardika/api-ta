@@ -162,7 +162,7 @@ class UserController {
 
   async editPartnerRegistration({ auth, request, response }) {
     const user = await auth.getUser();
-    const sanggar = await Sanggar.query().where("partnerId", user.id).fetch()
+    const sanggar = await Sanggar.query().where("partnerId", user.id)
     const userInfo = request.collect([
       "name",
       "description",
@@ -178,7 +178,7 @@ class UserController {
       "postal_code",
       "google_map_link",
     ]);
-    await sanggar.query().update({ userInfo })
+    await sanggar.update({ userInfo })
     // await sanggar.address().update({ addressInfo })
     return response.status(200).json({ message:"Success, berhasil merubah data!" })
     // try {
