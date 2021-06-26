@@ -179,6 +179,7 @@ class UserController {
     } catch (e) {
       console.log("There has been an error >>", e);
       // rollback the transaction if it fails for any reason
+      response.status(400).json({ message: "failed", data: e });
       await trx.rollback();
     }
   }
