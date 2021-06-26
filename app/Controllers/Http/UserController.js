@@ -180,7 +180,7 @@ class UserController {
     ]);
     try {
       await sanggar.update({ userInfo })
-      await sanggar.address().update({ addressInfo })
+      // await sanggar.address().update({ addressInfo })
       return response.status(200).json({ message:"Success, berhasil merubah data!" })
     } catch (err) {
       return response.status(400).json({ message: 'Error!', err } )
