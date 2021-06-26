@@ -146,18 +146,18 @@ class UserController {
     //   Helpers.tmpPath("uploads/" + imgName),
     //   { folder: "sanggar" }
     // );
+    const address = await SanggarAddress.create({
+      address: addressInfo.address,
+      city: addressInfo.city,
+      province: addressInfo.province,
+      postal_code: addressInfo.postal_code,
+      google_map_link: addressInfo.google_map_link,
+    });
+
+    // pass the transaction object
+    await address.save(trx);
     try {
       // console.log(cloudinaryResponse)
-      const address = await SanggarAddress.create({
-        address: addressInfo.address,
-        city: addressInfo.city,
-        province: addressInfo.province,
-        postal_code: addressInfo.postal_code,
-        google_map_link: addressInfo.google_map_link,
-      });
-
-      // pass the transaction object
-      await address.save(trx);
 
       const sanggar = new Sanggar();
       (sanggar.name = userInfo.name),
@@ -176,10 +176,10 @@ class UserController {
       trx.commit();
       response.status(200).json({ message: "success", data: sanggar });
       //
-    } catch (e) {
-      console.log("There has been an error >>", e);
+    } catch (error) {
+      console.log("There has been an error >>", error);
       // rollback the transaction if it fails for any reason
-      response.status(400).json({ message: "failed", data: e });
+      response.status(400).json({ message: "failed", error: error });
       await trx.rollback();
     }
   }
