@@ -162,7 +162,7 @@ class UserController {
 
   async editPartnerRegistration({ auth, request, response }) {
     const user = await auth.getUser();
-    const sanggar = Sanggar.query().where("partnerId", user.id).fetch();
+    const sanggar = await Sanggar.query().where("partnerId", user.id).fetch();
     const address_id = sanggar.sanggar_addressId
     const userInfo = request.only([
       "name",
