@@ -19,14 +19,14 @@ const Route = use("Route");
 Route.on('/checkmail').render('mail.user')
 Route.get("/", "SanggarController.index");
 Route.group(() => {
-  Route.post("/auth/login", "UserController.login");
-  Route.post("/auth/register", "UserController.register");
-  Route.post("/update/password-by-token","UserController.updatePasswordByToken");
   Route.get("/forgot/password", "UserController.forgotPassword");
   Route.get("/sanggar", "SanggarController.index");
   Route.get("/sanggar/:id", "SanggarController.detail");
   Route.get("/auth/user", "UserController.getCurrentUser");
   Route.get("/auth/users/verify-email", "UserController.verifyEmail");
+  Route.post("/auth/login", "UserController.login");
+  Route.post("/auth/register", "UserController.register");
+  Route.post("/update/password-by-token","UserController.updatePasswordByToken");
   Route.post("/sanggar/order/notification", "SanggarController.charge");
 }).prefix("/api");
 
@@ -50,8 +50,8 @@ Route.group(() => {
     Route.get("/dance-package", "SanggarController.indexDancePackage");
     Route.get("/order", "SanggarController.indexOrderPartner");
     Route.get("/order/:orderId", "SanggarController.detailOrderPartner");
-    Route.post("/dance-package/create", "SanggarController.createDancePackage");
     Route.get("/dance-package/:dancePackageId/", "SanggarController.detailDancePackage");
+    Route.post("/dance-package/create", "SanggarController.createDancePackage");
     Route.patch("/dance-package/:dancePackageId/edit", "SanggarController.editDancePackage");
     Route.put("/dance-package/:dancePackageId/delete", "SanggarController.deleteDancePackage");
   })
@@ -59,12 +59,13 @@ Route.group(() => {
   .prefix("api/sanggar/:sanggarId/");
   
   Route.group(() => {
-    Route.post("/verify-partner/:id", "UserController.verifyPartner");
     Route.get("/admin/order", "AdminController.indexOrderAdmin");
     Route.get("/admin/order/:orderId", "AdminController.detailOrderAdmin");
     Route.get("/partners", "UserController.getAllPartner")
     Route.get("/users", "UserController.getAllUser")
     Route.get("/user/:id", "AdminController.getDetailUser")
+    Route.post("/verify-partner/:id", "UserController.verifyPartner");
+    Route.post("/decline-verify/:id", "UserController.declineVerify");
     
   })
     .middleware(["auth", "rbac:admin"])

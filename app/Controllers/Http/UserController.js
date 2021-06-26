@@ -224,6 +224,20 @@ class UserController {
       return response.status(400).json({ message: "failed" });
     }
   }
+
+  async declineVerify({ auth, params, response }) {
+    const currentUser = await auth.getUser();
+    if (currentUser.role === "admin") {
+      const toBePartner = await User.query()
+        .where("id", params.id)
+        .update({ role: "customer", verified_by_admin_at: null });
+      return response
+        .status(200)
+        .json({ message: "success", data: toBePartner });
+    } else {
+      return response.status(400).json({ message: "failed" });
+    }
+  }
 }
 
 module.exports = UserController;
