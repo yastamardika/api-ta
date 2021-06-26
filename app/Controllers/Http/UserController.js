@@ -178,13 +178,13 @@ class UserController {
       "postal_code",
       "google_map_link",
     ]);
-    try {
-      await sanggar.update({ userInfo })
-      // await sanggar.address().update({ addressInfo })
-      return response.status(200).json({ message:"Success, berhasil merubah data!" })
-    } catch (err) {
-      return response.status(400).json({ message: 'Error!', err } )
-    }
+    await sanggar.update({ userInfo })
+    // await sanggar.address().update({ addressInfo })
+    return response.status(200).json({ message:"Success, berhasil merubah data!" })
+    // try {
+    // } catch (err) {
+    //   return response.status(400).json({ message: 'Error!', err } )
+    // }
   }
   async getAllPartner({ auth, response }) {
     const currentUser = await auth.getUser();
