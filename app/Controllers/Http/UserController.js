@@ -162,6 +162,7 @@ class UserController {
 
   async editPartnerRegistration({ auth, request, response }) {
     const user = await auth.getUser();
+    const sanggar = Sanggar.query().where("partnerId", user.id);
     const userInfo = request.only([
       "name",
       "description",
@@ -177,13 +178,17 @@ class UserController {
       "postal_code",
       "google_map_link",
     ]);
-    await Sanggar.query().where("partnerId", user.id).update(userInfo)
-    await Sanggar.query().where("partnerId", user.id).address().update( addressInfo )
-    return response.status(200).json({ message:"Success, berhasil merubah data!" })
-    // try {
-    // } catch (err) {
-    //   return response.status(400).json({ message: 'Error!', err } )
-    // }
+    try {
+      await Sanggar.query().where("partnerId", user.id).update(userInfo);
+      await SanggarAddress.query()
+        .where("id", user.sanggar_addressId)
+        .update(addressInfo);
+      return response
+        .status(200)
+        .json({ message: "Success, berhasil merubah data!" });
+    } catch (err) {
+      return response.status(400).json({ message: "Error!", err });
+    }
   }
   async getAllPartner({ auth, response }) {
     const currentUser = await auth.getUser();
@@ -232,7 +237,10 @@ class UserController {
     if (currentUser.role === "admin") {
       const toBePartner = await User.query()
         .where("id", params.id)
-        .update({ role: "customer", verified_by_admin_at: 'pengajuan ditolak' });
+        .update({
+          role: "customer",
+          verified_by_admin_at: "pengajuan ditolak",
+        });
       return response
         .status(200)
         .json({ message: "success", data: toBePartner });
