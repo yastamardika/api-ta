@@ -37,6 +37,7 @@ Route.group(() => {
   Route.post("sanggar/:sanggarId/order", "CustomerController.createOrder");
   Route.post("/sanggar/order", "SanggarController.charge");
   Route.post("/partner-registration", "UserController.partnerRegistration");
+  Route.put("/partner-registration", "UserController.editPartnerRegistration");
   Route.put("/sanggar/:sanggarId/delete", "SanggarController.deleteSanggar");
   Route.patch("/profile/change-password", "UserController.updatePassword");
   Route.patch("/profile/change-username", "UserController.editUsername");

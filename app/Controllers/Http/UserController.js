@@ -160,6 +160,32 @@ class UserController {
     }
   }
 
+  async editPartnerRegistration({ auth, request, response }) {
+    const user = await auth.getUser();
+    const sanggar = await Sanggar.query().where("partnerId", user.id).fetch()
+    const userInfo = request.only([
+      "name",
+      "description",
+      "phone",
+      "email",
+      "photo",
+      "youtube_video_profile",
+    ]);
+    const addressInfo = request.only([
+      "address",
+      "city",
+      "province",
+      "postal_code",
+      "google_map_link",
+    ]);
+    try {
+      await sanggar.update({ userInfo })
+      await sanggar.address().update({ addressInfo })
+      return response.status(200).json({ message:"Success, berhasil merubah data!" })
+    } catch (error) {
+      return response.status(400).json({ message: 'Error!', error: error } )
+    }
+  }
   async getAllPartner({ auth, response }) {
     const currentUser = await auth.getUser();
     if (currentUser.role === "admin") {
@@ -207,7 +233,7 @@ class UserController {
     if (currentUser.role === "admin") {
       const toBePartner = await User.query()
         .where("id", params.id)
-        .update({ role: "customer", verified_by_admin_at: null });
+        .update({ role: "customer", verified_by_admin_at: 'pengajuan ditolak' });
       return response
         .status(200)
         .json({ message: "success", data: toBePartner });
