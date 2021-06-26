@@ -162,7 +162,7 @@ class UserController {
 
   async editPartnerRegistration({ auth, request, response }) {
     const user = await auth.getUser();
-    const userInfo = request.collect([
+    const userInfo = request.only([
       "name",
       "description",
       "phone",
@@ -170,7 +170,7 @@ class UserController {
       "photo",
       "youtube_video_profile",
     ]);
-    const addressInfo = request.collect([
+    const addressInfo = request.only([
       "address",
       "city",
       "province",
