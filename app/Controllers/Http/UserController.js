@@ -179,10 +179,10 @@ class UserController {
       "postal_code",
       "google_map_link",
     ]);
-    console.log(sanggar.address.id);
+    console.log(sanggar.address['id']);
     await Sanggar.query().where("partnerId", user.id).update(userInfo);
     await SanggarAddress.query()
-      .where("id", sanggar.address.id)
+      .where("id", sanggar.address['id'])
       .update(addressInfo);
     return response
       .status(200)
