@@ -163,6 +163,7 @@ class UserController {
   async editPartnerRegistration({ auth, request, response }) {
     const user = await auth.getUser();
     const sanggar = Sanggar.query().where("partnerId", user.id);
+    const address_id = sanggar.sanggar_addressId
     const userInfo = request.only([
       "name",
       "description",
@@ -178,9 +179,10 @@ class UserController {
       "postal_code",
       "google_map_link",
     ]);
+    console.log(address_id);
     await Sanggar.query().where("partnerId", user.id).update(userInfo);
     await SanggarAddress.query()
-      .where("id", sanggar.sanggar_addressId)
+      .where("id", address_id)
       .update(addressInfo);
     return response
       .status(200)
