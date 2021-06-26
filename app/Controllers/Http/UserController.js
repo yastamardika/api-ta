@@ -163,7 +163,7 @@ class UserController {
   async editPartnerRegistration({ auth, request, response }) {
     const user = await auth.getUser();
     const sanggar = await Sanggar.query().where("partnerId", user.id).fetch()
-    const userInfo = request.only([
+    const userInfo = request.collect([
       "name",
       "description",
       "phone",
@@ -171,7 +171,7 @@ class UserController {
       "photo",
       "youtube_video_profile",
     ]);
-    const addressInfo = request.only([
+    const addressInfo = request.collect([
       "address",
       "city",
       "province",
@@ -180,7 +180,7 @@ class UserController {
     ]);
     try {
       await sanggar.update({ userInfo })
-      // await sanggar.address().update({ addressInfo })
+      await sanggar.address().update({ addressInfo })
       return response.status(200).json({ message:"Success, berhasil merubah data!" })
     } catch (err) {
       return response.status(400).json({ message: 'Error!', err } )
