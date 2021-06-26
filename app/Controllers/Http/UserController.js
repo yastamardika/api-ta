@@ -28,7 +28,7 @@ class UserController {
   async login({ request, auth, response }) {
     const payload = request.only(["uid", "password"]);
     const user = await Persona.verify(payload);
-    
+
     return await auth.generate(user);
   }
 
@@ -72,14 +72,14 @@ class UserController {
     return await auth.generate(user);
   }
 
-  async verifyEmail({ request, params, session, response, view}) {
+  async verifyEmail({ request, params, session, response, view }) {
     const token = request.input("token");
     const user = await Persona.verifyEmail(token);
     session.flash({ message: "Email verified" });
     return view.render("verified");
   }
 
-  async updatePassword({ auth, request, response  }) {
+  async updatePassword({ auth, request, response }) {
     const payload = request.only([
       "old_password",
       "password",
@@ -87,9 +87,9 @@ class UserController {
     ]);
     const user = await auth.getUser();
     const updatedUser = await Persona.updatePassword(user, payload);
-    return response.json({ message:"success!", data: updatedUser }) ;
+    return response.json({ message: "success!", data: updatedUser });
   }
-  
+
   async forgotPassword({ request }) {
     return await Persona.forgotPassword(request.input("uid"));
   }
@@ -100,7 +100,7 @@ class UserController {
     const user = await Persona.updatePasswordByToken(token, payload);
     return user;
   }
-  
+
   async partnerRegistration({ auth, request, response }) {
     const trx = await Database.beginTransaction();
     const user = await auth.getUser();
@@ -113,26 +113,13 @@ class UserController {
         .status(400)
         .json({ message: "failed, you already registering partner form" });
     }
-    // const imageSanggar = request.file("photo", {
-    //   types: ["image"],
-    //   size: "2mb",
-    // });
-    // const imgName = `${new Date().getTime()}.${imageSanggar.subtype}`;
-    // await imageSanggar.move(Helpers.tmpPath("uploads"), {
-    //   name: imgName,
-    //   overwrite: true,
-    // });
-    // if (!imageSanggar.moved()) {
-    //   response.badRequest(imageSanggar.errors());
-    //   return response.json({ message: imageSanggar.errors() });
-    // }
     const userInfo = request.only([
       "name",
       "description",
       "phone",
       "email",
       "photo",
-      "youtube_video_profile"
+      "youtube_video_profile",
     ]);
     const addressInfo = request.only([
       "address",
@@ -142,10 +129,6 @@ class UserController {
       "google_map_link",
     ]);
 
-    // const cloudinaryResponse = await Cloudinary.v2.uploader.upload(
-    //   Helpers.tmpPath("uploads/" + imgName),
-    //   { folder: "sanggar" }
-    // );
     const address = await SanggarAddress.create({
       address: addressInfo.address,
       city: addressInfo.city,
@@ -157,16 +140,14 @@ class UserController {
     // pass the transaction object
     await address.save(trx);
     try {
-      // console.log(cloudinaryResponse)
-
       const sanggar = new Sanggar();
       (sanggar.name = userInfo.name),
         (sanggar.description = userInfo.description),
         (sanggar.phone = userInfo.phone),
         (sanggar.email = userInfo.email),
-        (sanggar.youtube_video_profile = userInfo.youtube_video_profile)
-        // (sanggar.photo = cloudinaryResponse.secure_url), //cloudinary secure_url via nuxt-module
-        (sanggar.photo = userInfo.photo);
+        (sanggar.youtube_video_profile = userInfo.youtube_video_profile)(
+          (sanggar.photo = userInfo.photo)
+        );
       sanggar.partnerId = user.id;
       sanggar.sanggar_addressId = address.id;
 
