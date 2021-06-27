@@ -62,11 +62,12 @@ Route.group(() => {
   Route.group(() => {
     Route.get("/admin/order", "AdminController.indexOrderAdmin");
     Route.get("/admin/order/:orderId", "AdminController.detailOrderAdmin");
-    Route.get("/partners", "UserController.getAllPartner")
-    Route.get("/users", "UserController.getAllUser")
+    Route.get("/partners", "AdminController.getAllPartner")
+    Route.get("/partner-candidate", "AdminController.getPartnerCandidate")
+    Route.get("/users", "AdminController.getAllUser")
     Route.get("/user/:id", "AdminController.getDetailUser")
-    Route.post("/verify-partner/:id", "UserController.verifyPartner");
-    Route.post("/decline-verify/:id", "UserController.declineVerify");
+    Route.post("/verify-partner/:id", "AdminController.verifyPartner");
+    Route.post("/decline-verify/:id", "AdminController.declineVerify");
     
   })
     .middleware(["auth", "rbac:admin"])
