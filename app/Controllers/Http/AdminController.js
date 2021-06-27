@@ -85,7 +85,7 @@ class AdminController {
 
   async getDetailUser({ auth, params, response }) {
     const currentUser = await auth.getUser();
-    const detailUser = await User.find(params.id);
+    const detailUser = await User.query().where('id', params.id).with('sanggar').fetch();
     if (currentUser.role === "admin") {
       return response
         .status(200)
