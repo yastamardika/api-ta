@@ -114,12 +114,14 @@ class CustomerController {
       // result: https://app.sandbox.midtrans.com/snap/v2/vtweb/token
       const redirect_url = await Midtrans.vtwebCharge(transaction_data);
       console.log(redirect_url);
-
+      order.payment_token = token
+      order.payment_url = redirect_url
+      await order.save(trx)
       await trx.commit();
 
       return response
         .status(200)
-        .json({ message: "success", data: redirect_url });
+        .json({ message: "success", data: { redirect_url, order } });
     } catch (error) {
       await trx.rollback();
       return response.status(500).json({ message: "failed", data: error });
