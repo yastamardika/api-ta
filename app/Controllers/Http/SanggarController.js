@@ -4,6 +4,8 @@ const Sanggar = use("App/Models/Sanggar");
 const DancePackage = use("App/Models/DancePackage");
 const Order = use("App/Models/Order");
 const Midtrans = use("Midtrans");
+const OrderStatus = use("App/Models/OrderStatus");
+
 class SanggarController {
   async index({ response }) {
     // .has("sanggar.packages")
@@ -98,18 +100,9 @@ class SanggarController {
     if (transactionStatus == "settlement") {
       const tra = await Order.query()
         .where("id", orderId)
-        .update({ order_statusId: 2 });
+        .update({ order_statusId: OrderStatus.findByOrFail("name", "paid").id });
 
       return response.status(200).json({ message: "success", data: tra });
-      // if (fraudStatus == "challenge") {
-      //   // TODO set transaction status on your databaase to 'challenge'
-      //   order.query().update({ order_status: 4 });
-      //   return response.status(200).json({ message: "success", data: order });
-      // } else if (fraudStatus == "accept") {
-      //   // TODO set transaction status on your databaase to 'success'
-      //   order.query().update({ order_status: 2 });
-      //   return response.status(200).json({ message: "success", data: order });
-      // }
     } else if (
       transactionStatus == "cancel" ||
       transactionStatus == "deny" ||
@@ -118,14 +111,14 @@ class SanggarController {
       // TODO set transaction status on your databaase to 'failure'
       const tra = await Order.query()
         .where("id", orderId)
-        .update({ order_statusId: 3 });
+        .update({ order_statusId: OrderStatus.findByOrFail("name", "failed").id });
 
       return response.status(200).json({ message: "success", data: tra });
     } else if (transactionStatus == "pending") {
       // TODO set transaction status on your databaase to 'pending' / waiting payment
       const tra = await Order.query()
         .where("id", orderId)
-        .update({ order_statusId: 1 });
+        .update({ order_statusId: OrderStatus.findByOrFail("name", "waiting for payment").id });
       return response.status(200).json({ message: "success", data: tra });
     }
   }

@@ -9,6 +9,7 @@ const Midtrans = use("Midtrans");
 const moment = use("moment");
 const Sanggar = use("App/Models/Sanggar");
 const Database = use("Database");
+const OrderStatus = use("App/Models/OrderStatus");
 
 class CustomerController {
   async indexOrderCustomer({ auth, response }) {
@@ -27,12 +28,12 @@ class CustomerController {
   async detailOrderCustomer({ auth, params, response }) {
     try {
       const currentUser = await auth.getUser();
-        const order = Order.query()
-          .where("userId", currentUser.id)
-          .where("id", params.orderId)
-          .with(["customer", "package", "detail", "venue", "sanggar", "status"])
-          .fetch();
-        response.status(200).json({ message: "success!", data: order });
+      const order = Order.query()
+        .where("userId", currentUser.id)
+        .where("id", params.orderId)
+        .with(["customer", "package", "detail", "venue", "sanggar", "status"])
+        .fetch();
+      response.status(200).json({ message: "success!", data: order });
     } catch (error) {
       response.status(500).json({ message: error });
     }
@@ -40,18 +41,19 @@ class CustomerController {
 
   async createOrder({ auth, request, params, response }) {
     const trx = await Database.beginTransaction();
+    const orderStatus = await OrderStatus.firstOrFail();
+    const currentUser = await auth.getUser();
+    const detailInfo = request.only(["name", "phone", "email", "address"]);
+    const detailOrder = await OrderDetail.create(detailInfo);
+    await detailOrder.save(trx);
+    const venueInfo = request.only([
+      "venueAddress",
+      "venueLocation",
+      "venueCity",
+      "venueProvince",
+      "venueTime",
+    ]);
     try {
-      const currentUser = await auth.getUser();
-      const detailInfo = request.only(["name", "phone", "email", "address"]);
-      const detailOrder = await OrderDetail.create(detailInfo);
-      await detailOrder.save(trx);
-      const venueInfo = request.only([
-        "venueAddress",
-        "venueLocation",
-        "venueCity",
-        "venueProvince",
-        "venueTime",
-      ]);
       const venue = await DetailVenue.create({
         address: venueInfo.venueAddress,
         location: venueInfo.venueLocation,
@@ -64,14 +66,14 @@ class CustomerController {
 
       const date = new Date();
       const order = new Order();
-      (order.sanggarId = params.sanggarId),
-        (order.order_date = date),
-        (order.packageId = paket.id),
-        (order.order_detailId = detailOrder.id),
-        (order.userId = currentUser.id),
-        (order.total_amount = paket.harga),
-        (order.order_statusId = 1),
-        (order.venueId = venue.id);
+      order.sanggarId = params.sanggarId;
+      order.order_date = date;
+      order.packageId = paket.id;
+      order.order_detailId = detailOrder.id;
+      order.userId = currentUser.id;
+      order.total_amount = paket.harga;
+      order.order_statusId = orderStatus.id;
+      order.venueId = venue.id;
 
       await order.save(trx);
 
@@ -112,26 +114,29 @@ class CustomerController {
       // result: https://app.sandbox.midtrans.com/snap/v2/vtweb/token
       const redirect_url = await Midtrans.vtwebCharge(transaction_data);
       console.log(redirect_url);
+
       await trx.commit();
-      // choice one, token or redirect_url
 
-      //send email while success
-
-      // if (redirect_url != null) {
-      //   Mail.send('emails.welcome', user.toJSON(), (message) => {
-      //     message
-      //       .to(user.email)
-      //       .from('<from-email>')
-      //       .subject('Welcome to yardstick')
-      //   })
-      // }
       return response
         .status(200)
         .json({ message: "success", data: redirect_url });
     } catch (error) {
       await trx.rollback();
-      response.status(500).json({ message: "error!", data: error });
+      return response.status(500).json({ message: "failed", data: error });
     }
+
+    // choice one, token or redirect_url
+
+    //send email while success
+
+    // if (redirect_url != null) {
+    //   Mail.send('emails.welcome', user.toJSON(), (message) => {
+    //     message
+    //       .to(user.email)
+    //       .from('<from-email>')
+    //       .subject('Welcome to yardstick')
+    //   })
+    // }
   }
 }
 module.exports = CustomerController;
