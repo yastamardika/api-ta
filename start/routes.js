@@ -16,7 +16,12 @@
 /** @type {typeof import('@adonisjs/framework/src/Route/Manager')} */
 const Route = use("Route");
 
-Route.on('/checkmail').render('mail.user')
+Route.on('/checkmail').render('mail.user');
+Route.on('/welcome').render('welcome');
+Route.on('/payment/finish').render('order');
+Route.on('/payment/unfinish').render('unfinish');
+Route.on('/payment/failed').render('failed');
+
 Route.get("/", "SanggarController.index");
 Route.group(() => {
   Route.get("/forgot/password", "UserController.forgotPassword");
@@ -32,7 +37,7 @@ Route.group(() => {
 
 Route.group(() => {
   Route.get("/order", "CustomerController.indexOrderCustomer"); //daftar order yang dilakukan customer
-  Route.get("/order/:id", "CustomerController.detailOrderCustomer"); //detail order yang dilakukan customer
+  Route.get("/order/:orderId", "CustomerController.detailOrderCustomer"); //detail order yang dilakukan customer
   Route.post("/auth/logout", "UserController.logout"); 
   Route.post("sanggar/:sanggarId/order", "CustomerController.createOrder");
   Route.post("/sanggar/order", "SanggarController.charge");
