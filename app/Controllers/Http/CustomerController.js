@@ -53,7 +53,7 @@ class CustomerController {
       "venueProvince",
       "venueTime",
     ]);
-    try {
+    // try {
       const venue = await DetailVenue.create({
         address: venueInfo.venueAddress,
         location: venueInfo.venueLocation,
@@ -122,10 +122,10 @@ class CustomerController {
       return response
         .status(200)
         .json({ message: "success", data: { redirect_url, order } });
-    } catch (error) {
-      await trx.rollback();
-      return response.status(500).json({ message: "failed", data: error });
-    }
+    // } catch (error) {
+    //   await trx.rollback();
+    //   return response.status(500).json({ message: "failed", data: error });
+    // }
 
     // choice one, token or redirect_url
 
