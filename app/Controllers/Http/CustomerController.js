@@ -15,9 +15,14 @@ class CustomerController {
   async indexOrderCustomer({ auth, response }) {
     try {
       const currentUser = await auth.getUser();
-      const order = Order.query()
+      const order = await Order.query()
         .where("userId", currentUser.id)
-        .with(["customer", "package", "detail", "venue", "sanggar", "status"])
+        .with("customer")
+        .with("package")
+        .with("detail")
+        .with("venue")
+        .with("sanggar")
+        .with("status")
         .fetch();
       response.status(200).json({ message: "success!", data: order });
     } catch (error) {
@@ -28,10 +33,14 @@ class CustomerController {
   async detailOrderCustomer({ auth, params, response }) {
     try {
       const currentUser = await auth.getUser();
-      const order = Order.query()
+      const order = await Order.query()
         .where("userId", currentUser.id)
         .where("id", params.orderId)
-        .with(["customer", "package", "detail", "venue", "sanggar", "status"])
+        .with("package")
+        .with("detail")
+        .with("venue")
+        .with("sanggar")
+        .with("status")
         .fetch();
       response.status(200).json({ message: "success!", data: order });
     } catch (error) {
@@ -114,9 +123,9 @@ class CustomerController {
       // result: https://app.sandbox.midtrans.com/snap/v2/vtweb/token
       const redirect_url = await Midtrans.vtwebCharge(transaction_data);
       console.log(redirect_url);
-      order.payment_token = token
-      order.payment_url = redirect_url
-      await order.save(trx)
+      order.payment_token = token;
+      order.payment_url = redirect_url;
+      await order.save(trx);
       await trx.commit();
 
       return response
@@ -139,6 +148,10 @@ class CustomerController {
     //       .subject('Welcome to yardstick')
     //   })
     // }
+  }
+
+  async paymentSuccessPage({ response }) {
+    return response.redirect("localhost:3000/order", false, 301);
   }
 }
 module.exports = CustomerController;
