@@ -7,10 +7,12 @@ const Midtrans = use("Midtrans");
 const OrderStatus = use("App/Models/OrderStatus");
 
 class SanggarController {
-  async index({ response }) {
+
+  async index({ response, request }) {
     // .has("sanggar.packages")
+    const page = request.input('page', 1);
     try {
-      const user = await User.query()
+      const data = await User.query()
         .where("role", "partner")
         .has("sanggar")
         .whereHas('sanggar.packages', (builder) => {
@@ -18,8 +20,8 @@ class SanggarController {
         })
         .with("sanggar.address")
         .whereNull("deleted_at")
-        .fetch();
-      response.status(200).json({ messages: "success", data: user });
+        .paginate(page);
+      response.status(200).json( data );
     } catch (err) {
       response.status(500).json({ messages: "error", error: err });
     }

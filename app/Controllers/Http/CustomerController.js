@@ -12,7 +12,8 @@ const Database = use("Database");
 const OrderStatus = use("App/Models/OrderStatus");
 
 class CustomerController {
-  async indexOrderCustomer({ auth, response }) {
+  async indexOrderCustomer({ auth, response , request}) {
+    const page = request.input('page', 1);
     try {
       const currentUser = await auth.getUser();
       const order = await Order.query()
@@ -23,8 +24,8 @@ class CustomerController {
         .with("venue")
         .with("sanggar")
         .with("status")
-        .fetch();
-      response.status(200).json({ message: "success!", data: order });
+        .paginate(page,3);
+      response.status(200).json( order );
     } catch (error) {
       response.status(500).json({ message: error });
     }
