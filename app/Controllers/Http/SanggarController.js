@@ -237,8 +237,9 @@ class SanggarController {
   async detailOrderPartner({ auth, params, response }) {
     const currentUser = await auth.getUser();
     const sanggar = await Sanggar.findByOrFail("partnerId", currentUser.id);
+    console.log(sanggar.id);
     try {
-      if (sanggar.id === params.sanggarId) {
+      if (sanggar.id == params.sanggarId) {
         const order = await Order.query()
           .where("id", params.orderId)
           .with("customer")
