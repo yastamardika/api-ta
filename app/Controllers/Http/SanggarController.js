@@ -217,6 +217,7 @@ class SanggarController {
   async indexOrderPartner({ auth, response }) {
     const currentUser = await auth.getUser();
     const sanggar = await Sanggar.findByOrFail("partnerId", currentUser.id);
+    console.log(sanggar.id);
     try {
       const order = await Order.query()
         .where("sanggarId", sanggar.id)
