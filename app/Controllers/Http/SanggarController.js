@@ -7,21 +7,20 @@ const Midtrans = use("Midtrans");
 const OrderStatus = use("App/Models/OrderStatus");
 
 class SanggarController {
-
   async index({ response, request }) {
     // .has("sanggar.packages")
-    const page = request.input('page', 1);
+    const page = request.input("page", 1);
     try {
       const data = await User.query()
         .where("role", "partner")
         .has("sanggar")
-        .whereHas('sanggar.packages', (builder) => {
-          builder.whereNull('deleted_at')
+        .whereHas("sanggar.packages", (builder) => {
+          builder.whereNull("deleted_at");
         })
         .with("sanggar.address")
         .whereNull("deleted_at")
         .paginate(page);
-      response.status(200).json( data );
+      response.status(200).json(data);
     } catch (err) {
       response.status(500).json({ messages: "error", error: err });
     }
@@ -32,7 +31,7 @@ class SanggarController {
       const sanggar = await Sanggar.query()
         .with("address")
         .with("packages", (builder) => {
-          builder.whereNull('deleted_at')
+          builder.whereNull("deleted_at");
         })
         .with("user")
         .where("id", params.id)
@@ -102,7 +101,9 @@ class SanggarController {
     if (transactionStatus == "settlement") {
       const tra = await Order.query()
         .where("id", orderId)
-        .update({ order_statusId: OrderStatus.findByOrFail("name", "paid").id });
+        .update({
+          order_statusId: OrderStatus.findByOrFail("name", "paid").id,
+        });
 
       return response.status(200).json({ message: "success", data: tra });
     } else if (
@@ -113,14 +114,21 @@ class SanggarController {
       // TODO set transaction status on your databaase to 'failure'
       const tra = await Order.query()
         .where("id", orderId)
-        .update({ order_statusId: OrderStatus.findByOrFail("name", "failed").id });
+        .update({
+          order_statusId: OrderStatus.findByOrFail("name", "failed").id,
+        });
 
       return response.status(200).json({ message: "success", data: tra });
     } else if (transactionStatus == "pending") {
       // TODO set transaction status on your databaase to 'pending' / waiting payment
       const tra = await Order.query()
         .where("id", orderId)
-        .update({ order_statusId: OrderStatus.findByOrFail("name", "waiting for payment").id });
+        .update({
+          order_statusId: OrderStatus.findByOrFail(
+            "name",
+            "waiting for payment"
+          ).id,
+        });
       return response.status(200).json({ message: "success", data: tra });
     }
   }
@@ -207,12 +215,20 @@ class SanggarController {
   }
 
   async indexOrderPartner({ auth, response }) {
+    const currentUser = await auth.getUser();
+    const sanggar = await Sanggar.query()
+      .where("partnerId", currentUser.id)
+      .fetch();
     try {
-      const currentUser = await auth.getUser();
-      const sanggar = Sanggar.query()
-        .where("partnerId", currentUser.id)
+      const order = await Order.query()
+        .where("sanggarId", sanggar.id)
+        .with("customer")
+        .with("package")
+        .with("detail")
+        .with("venue")
+        .with("sanggar")
+        .with("status")
         .fetch();
-      const order = Order.query().where("sanggarId", sanggar.id) .with(["customer", "package", "detail", "venue", "sanggar", "status"]).fetch();
       response.status(200).json({ message: "success!", data: order });
     } catch (error) {
       response.status(500).json({ message: error });
@@ -220,15 +236,20 @@ class SanggarController {
   }
 
   async detailOrderPartner({ auth, params, response }) {
+    const currentUser = await auth.getUser();
+    const sanggar = await Sanggar.query()
+      .where("partnerId", currentUser.id)
+      .fetch();
     try {
-      const currentUser = await auth.getUser();
-      const sanggar = Sanggar.query()
-        .where("partnerId", currentUser.id)
-        .fetch();
       if (sanggar.id === params.sanggarId) {
-        const order = Order.query()
+        const order = await Order.query()
           .where("id", params.orderId)
-          .with(["customer", "package", "detail", "venue", "sanggar", "status"])
+          .with("customer")
+          .with("package")
+          .with("detail")
+          .with("venue")
+          .with("sanggar")
+          .with("status")
           .fetch();
         response.status(200).json({ message: "success!", data: order });
       } else {

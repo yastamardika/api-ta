@@ -136,19 +136,6 @@ class CustomerController {
       await trx.rollback();
       return response.status(500).json({ message: "failed", data: error });
     }
-
-    // choice one, token or redirect_url
-
-    //send email while success
-
-    // if (redirect_url != null) {
-    //   Mail.send('emails.welcome', user.toJSON(), (message) => {
-    //     message
-    //       .to(user.email)
-    //       .from('<from-email>')
-    //       .subject('Welcome to yardstick')
-    //   })
-    // }
   }
 
   async paymentSuccessPage({ response }) {
