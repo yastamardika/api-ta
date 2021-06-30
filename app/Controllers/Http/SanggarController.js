@@ -216,9 +216,7 @@ class SanggarController {
 
   async indexOrderPartner({ auth, response }) {
     const currentUser = await auth.getUser();
-    const sanggar = await Sanggar.query()
-      .where("partnerId", currentUser.id)
-      .fetch();
+    const sanggar = await Sanggar.findByOrFail("partnerId", currentUser.id);
     try {
       const order = await Order.query()
         .where("sanggarId", sanggar.id)
@@ -237,9 +235,7 @@ class SanggarController {
 
   async detailOrderPartner({ auth, params, response }) {
     const currentUser = await auth.getUser();
-    const sanggar = await Sanggar.query()
-      .where("partnerId", currentUser.id)
-      .fetch();
+    const sanggar = await Sanggar.findByOrFail("partnerId", currentUser.id);
     try {
       if (sanggar.id === params.sanggarId) {
         const order = await Order.query()
