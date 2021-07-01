@@ -59,20 +59,32 @@ class SanggarController {
     }
   }
 
-  async editSanggar({ auth, request, params, response }) {
+  async editPartnerRegistration({ auth, request, params, response }) {
+    const user = await auth.getUser();
+    const sanggar = await Sanggar.find(params.sanggarId);
+    const userInfo = request.only([
+      "name",
+      "description",
+      "phone",
+      "email",
+      "photo",
+      "youtube_video_profile",
+    ]);
+    const addressInfo = request.only([
+      "address",
+      "city",
+      "province",
+      "postal_code",
+      "google_map_link",
+    ]);
     try {
-      const user = await auth.getUser();
-      const data = request.all();
-      const partner = await Sanggar.find(params.sanggarId);
-      if (user.id == partner.partnerId) {
-        await Sanggar.query().where("id", params.sanggarId).update(data);
-        return response.status(200).json({ status: 200, message: "success!" });
-      }
+      await Sanggar.query().where("partnerId", user.id).update(userInfo);
+      await sanggar.address().update(addressInfo);
       return response
-        .status(400)
-        .json({ message: "Failed!, unauthorized user!" });
-    } catch (e) {
-      response.status(500).json({ status: 400, message: "An error occured!" });
+        .status(200)
+        .json({ message: "Success, berhasil merubah data!", data: sanggar });
+    } catch (err) {
+      return response.status(400).json({ message: "Error!", err });
     }
   }
 

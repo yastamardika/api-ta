@@ -13,6 +13,7 @@ class UserController {
     const currentUser = await User.query()
       .where("id", user.id)
       .with("sanggar")
+      .with("sanggar.address")
       .fetch();
     return currentUser;
   }
