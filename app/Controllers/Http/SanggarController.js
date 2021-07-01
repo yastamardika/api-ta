@@ -59,7 +59,7 @@ class SanggarController {
     }
   }
 
-  async editPartnerRegistration({ auth, request, params, response }) {
+  async editSanggarInfo({ auth, request, params, response }) {
     const user = await auth.getUser();
     const sanggar = await Sanggar.find(params.sanggarId);
     const userInfo = request.only([
