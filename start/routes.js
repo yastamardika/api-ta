@@ -24,11 +24,12 @@ Route.on('/payment/failed').render('failed');
 
 Route.get("/", "SanggarController.index");
 Route.group(() => {
-  Route.get("/forgot/password", "UserController.forgotPassword");
+  Route.get("/home", "SanggarController.homeSanggar");
   Route.get("/sanggar", "SanggarController.index");
   Route.get("/sanggar/:id", "SanggarController.detail");
   Route.get("/auth/user", "UserController.getCurrentUser");
   Route.get("/auth/users/verify-email", "UserController.verifyEmail");
+  Route.get("/forgot/password", "UserController.forgotPassword");
   Route.post("/auth/login", "UserController.login");
   Route.post("/auth/register", "UserController.register");
   Route.post("/update/password-by-token","UserController.updatePasswordByToken");
