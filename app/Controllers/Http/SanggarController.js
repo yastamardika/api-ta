@@ -39,6 +39,12 @@ class SanggarController {
     // 5 sanggarOrder terbaru
     const latestOrder = await Order.query()
       .where("sanggarId", sanggar.id)
+      .with("customer")
+      .with("package")
+      .with("detail")
+      .with("venue")
+      .with("sanggar")
+      .with("status")
       .pickInverse(5);
     // total pelanggan
     const totalCustomer = await Order.query()
@@ -49,15 +55,13 @@ class SanggarController {
       .where("sanggarId", sanggar.id)
       .where("order_statusId", status.id)
       .getSum("total_amount");
-    response
-      .status(200)
-      .json({
-        total_order_completed: totalOrderCompleted,
-        all_sanggar_order_count: allSanggarOrderCount,
-        latest_order: latestOrder,
-        total_customer: totalCustomer,
-        total_income: totalIncome,
-      });
+    response.status(200).json({
+      total_order_completed: totalOrderCompleted,
+      all_sanggar_order_count: allSanggarOrderCount,
+      latest_order: latestOrder,
+      total_customer: totalCustomer,
+      total_income: totalIncome,
+    });
   }
 
   async homeSanggar({ response }) {
@@ -89,8 +93,12 @@ class SanggarController {
         .with("user")
         .where("id", params.id)
         .fetch();
-      const minPrice = await DancePackage.query().where("sanggarId", params.id).getMin("harga")
-      response.status(201).json({ message: "Success", data: sanggar, min_price: minPrice});
+      const minPrice = await DancePackage.query()
+        .where("sanggarId", params.id)
+        .getMin("harga");
+      response
+        .status(201)
+        .json({ message: "Success", data: sanggar, min_price: minPrice });
     } catch (error) {
       response.status(500).json({ message: "error" });
     }
