@@ -25,6 +25,41 @@ class SanggarController {
     }
   }
 
+  async dashboardInfo({ params, response }) {
+    const sanggar = await Sanggar.find(params.sanggarId);
+    const status = await OrderStatus.findByOrFail("name", "completed");
+    // total sanggarOrder
+    const totalOrderCompleted = await Order.query()
+      .where("sanggarId", sanggar.id)
+      .where("order_statusId", status.id)
+      .getCount();
+    const allSanggarOrderCount = await Order.query()
+      .where("sanggarId", sanggar.id)
+      .getCount();
+    // 5 sanggarOrder terbaru
+    const latestOrder = await Order.query()
+      .where("sanggarId", sanggar.id)
+      .pickInverse(5);
+    // total pelanggan
+    const totalCustomer = await Order.query()
+      .where("sanggarId", sanggar.id)
+      .getCountDistinct("userId");
+    // total pemasukan
+    const totalIncome = await Order.query()
+      .where("sanggarId", sanggar.id)
+      .where("order_statusId", status.id)
+      .getSum("total_amount");
+    response
+      .status(200)
+      .json({
+        total_order_completed: totalOrderCompleted,
+        all_sanggar_order_count: allSanggarOrderCount,
+        latest_order: latestOrder,
+        total_customer: totalCustomer,
+        total_income: totalIncome,
+      });
+  }
+
   async homeSanggar({ response }) {
     try {
       const data = await User.query()
@@ -35,8 +70,9 @@ class SanggarController {
         })
         .with("sanggar.address")
         .whereNull("deleted_at")
-        .orderBy('id', 'desc')
-        .limit(3).fetch()
+        .orderBy("id", "desc")
+        .limit(3)
+        .fetch();
       response.status(200).json(data);
     } catch (err) {
       response.status(500).json({ messages: "error", error: err });
@@ -53,7 +89,8 @@ class SanggarController {
         .with("user")
         .where("id", params.id)
         .fetch();
-      response.status(201).json({ message: "Success", data: sanggar });
+      const minPrice = await DancePackage.query().where("sanggarId", params.id).getMin("harga")
+      response.status(201).json({ message: "Success", data: sanggar, min_price: minPrice});
     } catch (error) {
       response.status(500).json({ message: "error" });
     }

@@ -54,6 +54,7 @@ Route.group(() => {
   .prefix("api/");
   
   Route.group(() => {
+    Route.get("/info", "SanggarController.dashboardInfo");
     Route.get("/dance-package", "SanggarController.indexDancePackage");
     Route.get("/order", "SanggarController.indexOrderPartner");
     Route.get("/order/:orderId", "SanggarController.detailOrderPartner");
