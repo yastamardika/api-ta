@@ -158,6 +158,20 @@ class SanggarController {
     }
   }
 
+  async declinePayment({ params, request, response }) {
+    try {
+      const order = await Order.findOrFail(params.orderId)
+      const refundParams = {
+        amount: order.total_amount
+      }
+      const status = await Midtrans.deny(request.input("order_id"));
+      const refund = await Midtrans.refund(request.input("order_id"), refundParams);
+      return response.status(200).json({ message: "success", data: status, refund });
+    } catch (error) {
+      return response.status(400).json({ message: "failed!" });
+    }
+  }
+
   async charge({ request, response }) {
     const notification = request.all();
 
@@ -176,10 +190,10 @@ class SanggarController {
       const tra = await Order.query()
         .where("id", orderId)
         .update({
-          order_statusId: OrderStatus.findByOrFail("name", "paid").id,
+          order_statusId: await OrderStatus.findByOrFail("name", "paid").id,
         });
 
-      return response.status(200).json({ message: "success", data: tra });
+      return response.status(200).json({ message: "paid successful", data: tra });
     } else if (
       transactionStatus == "cancel" ||
       transactionStatus == "deny" ||
@@ -189,21 +203,21 @@ class SanggarController {
       const tra = await Order.query()
         .where("id", orderId)
         .update({
-          order_statusId: OrderStatus.findByOrFail("name", "failed").id,
+          order_statusId: await OrderStatus.findByOrFail("name", "failed").id,
         });
 
-      return response.status(200).json({ message: "success", data: tra });
+      return response.status(200).json({ message: "failed to pay", data: tra });
     } else if (transactionStatus == "pending") {
       // TODO set transaction status on your databaase to 'pending' / waiting payment
       const tra = await Order.query()
         .where("id", orderId)
         .update({
-          order_statusId: OrderStatus.findByOrFail(
+          order_statusId: await OrderStatus.findByOrFail(
             "name",
             "waiting for payment"
           ).id,
         });
-      return response.status(200).json({ message: "success", data: tra });
+      return response.status(200).json({ message: "payment on pending", data: tra });
     }
   }
 
@@ -311,6 +325,7 @@ class SanggarController {
   async detailOrderPartner({ auth, params, response }) {
     const currentUser = await auth.getUser();
     const sanggar = await Sanggar.findByOrFail("partnerId", currentUser.id);
+    console.log(params.orderId);
     const midtransStatus = await Midtrans.status(params.orderId);
     try {
       if (sanggar.id == params.sanggarId) {
@@ -323,7 +338,7 @@ class SanggarController {
           .with("sanggar")
           .with("status")
           .fetch();
-        response.status(200).json({ message: "success!", data: order, midtransStatus });
+        response.status(200).json({ message: "success!", data: order });
       } else {
         response.status(404).json({ message: "Order not found!" });
       }
