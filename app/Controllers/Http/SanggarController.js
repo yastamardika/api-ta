@@ -188,6 +188,7 @@ class SanggarController {
     // Sample transactionStatus handling logic
     if (transactionStatus == "settlement") {
       const orderStatus = await OrderStatus.findByOrFail("name", "paid")
+      console.log(orderStatus);
       const tra = await Order.query()
         .where("id", orderId)
         .update({
@@ -328,8 +329,47 @@ class SanggarController {
   async detailOrderPartner({ auth, params, response }) {
     const currentUser = await auth.getUser();
     const sanggar = await Sanggar.findByOrFail("partnerId", currentUser.id);
-    console.log(params.orderId);
-    const midtransStatus = await Midtrans.status(params.orderId);
+    let midtransStatus
+    try {
+      midtransStatus = await Midtrans.status(params.orderId);
+      transactionStatus = midtransStatus.transaction_status
+      if (transactionStatus == "settlement") {
+        const orderStatus = await OrderStatus.findByOrFail("name", "paid")
+        console.log(orderStatus);
+        await Order.query()
+          .where("id",  params.orderId)
+          .update({
+            order_statusId: orderStatus.id,
+          });
+  
+      } else if (
+        transactionStatus == "cancel" ||
+        transactionStatus == "deny" ||
+        transactionStatus == "expire"
+      ) {
+        // TODO set transaction status on your databaase to 'failure'
+        const orderStatus = await OrderStatus.findByOrFail("name", "failed")
+        await Order.query()
+          .where("id",  params.orderId)
+          .update({
+            order_statusId: orderStatus.id,
+          });
+  
+      } else if (transactionStatus == "pending") {
+        // TODO set transaction status on your databaase to 'pending' / waiting payment
+        const orderStatus = await OrderStatus.findByOrFail(
+          "name",
+          "waiting for payment"
+        )
+        await Order.query()
+          .where("id",  params.orderId)
+          .update({
+            order_statusId: orderStatus.id,
+          });
+      }
+    } catch (error) {
+      midtransStatus = null
+    }
     try {
       if (sanggar.id == params.sanggarId) {
         const order = await Order.query()
