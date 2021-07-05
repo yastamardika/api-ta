@@ -187,10 +187,11 @@ class SanggarController {
 
     // Sample transactionStatus handling logic
     if (transactionStatus == "settlement") {
+      const orderStatus = await OrderStatus.findByOrFail("name", "paid")
       const tra = await Order.query()
         .where("id", orderId)
         .update({
-          order_statusId: await OrderStatus.findByOrFail("name", "paid").id,
+          order_statusId: orderStatus.id,
         });
 
       return response.status(200).json({ message: "paid successful", data: tra });
@@ -200,22 +201,24 @@ class SanggarController {
       transactionStatus == "expire"
     ) {
       // TODO set transaction status on your databaase to 'failure'
+      const orderStatus = await OrderStatus.findByOrFail("name", "failed")
       const tra = await Order.query()
         .where("id", orderId)
         .update({
-          order_statusId: await OrderStatus.findByOrFail("name", "failed").id,
+          order_statusId: orderStatus.id,
         });
 
       return response.status(200).json({ message: "failed to pay", data: tra });
     } else if (transactionStatus == "pending") {
       // TODO set transaction status on your databaase to 'pending' / waiting payment
+      const orderStatus = await OrderStatus.findByOrFail(
+        "name",
+        "waiting for payment"
+      )
       const tra = await Order.query()
         .where("id", orderId)
         .update({
-          order_statusId: await OrderStatus.findByOrFail(
-            "name",
-            "waiting for payment"
-          ).id,
+          order_statusId: orderStatus.id,
         });
       return response.status(200).json({ message: "payment on pending", data: tra });
     }
@@ -338,7 +341,7 @@ class SanggarController {
           .with("sanggar")
           .with("status")
           .fetch();
-        response.status(200).json({ message: "success!", data: order });
+        response.status(200).json({ message: "success!", data: order, midtrans_status: midtransStatus });
       } else {
         response.status(404).json({ message: "Order not found!" });
       }
