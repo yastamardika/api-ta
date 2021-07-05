@@ -58,6 +58,8 @@ Route.group(() => {
     Route.get("/dance-package", "SanggarController.indexDancePackage");
     Route.get("/order", "SanggarController.indexOrderPartner");
     Route.get("/order/:orderId", "SanggarController.detailOrderPartner");
+    Route.get("/order/:orderId/approve", "SanggarController.acceptPayment");
+    Route.get("/order/:orderId/decline", "SanggarController.declinePayment");
     Route.get("/dance-package/:dancePackageId/", "SanggarController.detailDancePackage");
     Route.post("/dance-package/create", "SanggarController.createDancePackage");
     Route.patch("/dance-package/:dancePackageId/edit", "SanggarController.editDancePackage");
