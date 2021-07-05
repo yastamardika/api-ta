@@ -35,7 +35,7 @@ class CustomerController {
     let midtransStatus
     try {
       midtransStatus = await Midtrans.status(params.orderId);
-      transactionStatus = midtransStatus.transaction_status
+      const transactionStatus = midtransStatus.transaction_status
       if (transactionStatus == "settlement") {
         const orderStatus = await OrderStatus.findByOrFail("name", "paid")
         console.log(orderStatus);

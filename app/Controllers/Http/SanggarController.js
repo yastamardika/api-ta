@@ -332,7 +332,7 @@ class SanggarController {
     let midtransStatus
     try {
       midtransStatus = await Midtrans.status(params.orderId);
-      transactionStatus = midtransStatus.transaction_status
+      const transactionStatus = midtransStatus.transaction_status
       if (transactionStatus == "settlement") {
         const orderStatus = await OrderStatus.findByOrFail("name", "paid")
         console.log(orderStatus);
@@ -368,6 +368,7 @@ class SanggarController {
           });
       }
     } catch (error) {
+      console.log(error);
       midtransStatus = null
     }
     try {
