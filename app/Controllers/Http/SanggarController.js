@@ -311,7 +311,7 @@ class SanggarController {
   async detailOrderPartner({ auth, params, response }) {
     const currentUser = await auth.getUser();
     const sanggar = await Sanggar.findByOrFail("partnerId", currentUser.id);
-    console.log(sanggar.id);
+    const midtransStatus = await Midtrans.status(params.orderId);
     try {
       if (sanggar.id == params.sanggarId) {
         const order = await Order.query()
@@ -323,7 +323,7 @@ class SanggarController {
           .with("sanggar")
           .with("status")
           .fetch();
-        response.status(200).json({ message: "success!", data: order });
+        response.status(200).json({ message: "success!", data: order, midtransStatus });
       } else {
         response.status(404).json({ message: "Order not found!" });
       }

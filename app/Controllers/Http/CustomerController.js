@@ -43,7 +43,8 @@ class CustomerController {
         .with("sanggar")
         .with("status")
         .fetch();
-      response.status(200).json({ message: "success!", data: order });
+      const midtransStatus = await Midtrans.status(params.orderId);
+      response.status(200).json({ message: "success!", data: order, midtransStatus });
     } catch (error) {
       response.status(500).json({ message: error });
     }
