@@ -333,14 +333,17 @@ class SanggarController {
     try {
       midtransStatus = await Midtrans.status(params.orderId);
       const transactionStatus = midtransStatus.transaction_status
+      const order = await Order.findOrFail(params.orderId)
+      const currentStatus = await order.status().fetch()
       if (transactionStatus == "settlement") {
         const orderStatus = await OrderStatus.findByOrFail("name", "paid")
-        console.log(orderStatus);
-        await Order.query()
-          .where("id",  params.orderId)
-          .update({
-            order_statusId: orderStatus.id,
-          });
+        if (currentStatus.name != "proccessed" || currentStatus.name != "completed") {
+          await Order.query()
+            .where("id",  params.orderId)
+            .update({
+              order_statusId: orderStatus.id,
+            });
+        }
   
       } else if (
         transactionStatus == "cancel" ||

@@ -38,13 +38,15 @@ class CustomerController {
       const transactionStatus = midtransStatus.transaction_status
       if (transactionStatus == "settlement") {
         const orderStatus = await OrderStatus.findByOrFail("name", "paid")
-        console.log(orderStatus);
-        await Order.query()
-          .where("id",  params.orderId)
-          .update({
-            order_statusId: orderStatus.id,
-          });
-  
+        const order = await Order.findOrFail(params.orderId)
+        const currentStatus = await order.status().fetch()
+        if (currentStatus.name != "proccessed" || currentStatus.name != "completed") {
+          await Order.query()
+            .where("id",  params.orderId)
+            .update({
+              order_statusId: orderStatus.id,
+            });
+        }
       } else if (
         transactionStatus == "cancel" ||
         transactionStatus == "deny" ||
