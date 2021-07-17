@@ -4,16 +4,14 @@ const Order = use("App/Models/Order");
 const DetailVenue = use("App/Models/DetailVenue");
 const OrderDetail = use("App/Models/OrderDetail");
 const DancePackage = use("App/Models/DancePackage");
-const Mail = use("Mail");
 const Midtrans = use("Midtrans");
 const moment = use("moment");
-const Sanggar = use("App/Models/Sanggar");
 const Database = use("Database");
 const OrderStatus = use("App/Models/OrderStatus");
 
 class CustomerController {
-  async indexOrderCustomer({ auth, response , request}) {
-    const page = request.input('page', 1);
+  async indexOrderCustomer({ auth, response, request }) {
+    const page = request.input("page", 1);
     try {
       const currentUser = await auth.getUser();
       const order = await Order.query()
@@ -24,28 +22,28 @@ class CustomerController {
         .with("venue")
         .with("sanggar")
         .with("status")
-        .paginate(page,3);
-      response.status(200).json( order );
+        .paginate(page, 3);
+      response.status(200).json(order);
     } catch (error) {
       response.status(500).json({ message: error });
     }
   }
 
   async detailOrderCustomer({ auth, params, response }) {
-    let midtransStatus
+    let midtransStatus;
     try {
       midtransStatus = await Midtrans.status(params.orderId);
-      const transactionStatus = midtransStatus.transaction_status
+      const transactionStatus = midtransStatus.transaction_status;
       if (transactionStatus == "settlement") {
-        const orderStatus = await OrderStatus.findByOrFail("name", "paid")
-        const order = await Order.findOrFail(params.orderId)
-        const currentStatus = await order.status().fetch()
-        if (currentStatus.name != "proccessed" || currentStatus.name != "completed") {
-          await Order.query()
-            .where("id",  params.orderId)
-            .update({
+        const orderStatus = await OrderStatus.findByOrFail("name", "paid");
+        const order = await Order.findOrFail(params.orderId);
+        const currentStatus = await order.status().fetch();
+        if (currentStatus.name != "proccessed") {
+          if (currentStatus.name != "completed") {
+            await Order.query().where("id", params.orderId).update({
               order_statusId: orderStatus.id,
             });
+          }
         }
       } else if (
         transactionStatus == "cancel" ||
@@ -53,27 +51,22 @@ class CustomerController {
         transactionStatus == "expire"
       ) {
         // TODO set transaction status on your databaase to 'failure'
-        const orderStatus = await OrderStatus.findByOrFail("name", "failed")
-        await Order.query()
-          .where("id",  params.orderId)
-          .update({
-            order_statusId: orderStatus.id,
-          });
-  
+        const orderStatus = await OrderStatus.findByOrFail("name", "failed");
+        await Order.query().where("id", params.orderId).update({
+          order_statusId: orderStatus.id,
+        });
       } else if (transactionStatus == "pending") {
         // TODO set transaction status on your databaase to 'pending' / waiting payment
         const orderStatus = await OrderStatus.findByOrFail(
           "name",
           "waiting for payment"
-        )
-        await Order.query()
-          .where("id",  params.orderId)
-          .update({
-            order_statusId: orderStatus.id,
-          });
+        );
+        await Order.query().where("id", params.orderId).update({
+          order_statusId: orderStatus.id,
+        });
       }
     } catch (error) {
-      midtransStatus = null
+      midtransStatus = null;
     }
     try {
       const currentUser = await auth.getUser();
@@ -87,7 +80,13 @@ class CustomerController {
         .with("status")
         .fetch();
       const midtransStatus = await Midtrans.status(params.orderId);
-      response.status(200).json({ message: "success!", data: order, midtrans_status: midtransStatus });
+      response
+        .status(200)
+        .json({
+          message: "success!",
+          data: order,
+          midtrans_status: midtransStatus,
+        });
     } catch (error) {
       response.status(500).json({ message: error });
     }

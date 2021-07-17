@@ -149,10 +149,16 @@ class SanggarController {
     }
   }
 
-  async acceptPayment({ request, response }) {
+  async acceptPayment({ params, response }) {
     try {
-      const status = await Midtrans.approve(request.input("order_id"));
-      return response.status(200).json({ message: "success", data: status });
+      const orderStatus = await OrderStatus.findByOrFail("name", "processed")
+      await Order.query()
+        .where("id", params.orderId)
+        .update({
+          order_statusId: orderStatus.id,
+        });
+      const res = await Order.query().where("id", params.orderId).with('status').fetch();
+      return response.status(200).json({ message: "success", data: res });
     } catch (error) {
       return response.status(400).json({ message: "failed!" });
     }
@@ -164,9 +170,15 @@ class SanggarController {
       const refundParams = {
         amount: order.total_amount
       }
+      const orderStatus = await OrderStatus.findByOrFail("name", "failed")
+      const tra = await Order.query()
+        .where("id", params.orderId)
+        .update({
+          order_statusId: orderStatus.id,
+        });
       const status = await Midtrans.deny(request.input("order_id"));
       const refund = await Midtrans.refund(request.input("order_id"), refundParams);
-      return response.status(200).json({ message: "success", data: status, refund });
+      return response.status(200).json({ message: "success", data: status, refund, tra });
     } catch (error) {
       return response.status(400).json({ message: "failed!" });
     }
@@ -335,16 +347,18 @@ class SanggarController {
       const transactionStatus = midtransStatus.transaction_status
       const order = await Order.findOrFail(params.orderId)
       const currentStatus = await order.status().fetch()
+      console.log(currentStatus.name);
       if (transactionStatus == "settlement") {
         const orderStatus = await OrderStatus.findByOrFail("name", "paid")
-        if (currentStatus.name != "proccessed" || currentStatus.name != "completed") {
-          await Order.query()
+        if (currentStatus.name != "processed") {
+          if (currentStatus.name != "completed") {
+            await Order.query()
             .where("id",  params.orderId)
             .update({
               order_statusId: orderStatus.id,
             });
+          }
         }
-  
       } else if (
         transactionStatus == "cancel" ||
         transactionStatus == "deny" ||
