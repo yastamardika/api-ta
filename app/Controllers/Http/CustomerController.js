@@ -40,9 +40,11 @@ class CustomerController {
         const currentStatus = await order.status().fetch();
         if (currentStatus.name != "proccessed") {
           if (currentStatus.name != "completed") {
-            await Order.query().where("id", params.orderId).update({
-              order_statusId: orderStatus.id,
-            });
+            if (currentStatus.name != "failed") {
+              await Order.query().where("id", params.orderId).update({
+                order_statusId: orderStatus.id,
+              });
+            }
           }
         }
       } else if (
