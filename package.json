@@ -30,6 +30,7 @@
     "@adonisjs/shield": "^1.0.8",
     "@adonisjs/validator": "^5.0.6",
     "adonis-midtrans": "^1.1.0",
+    "adonis-search": "^1.0.3",
     "cloudinary": "^1.25.1",
     "mysql": "^2.18.1",
     "url-parse": "^1.5.1"

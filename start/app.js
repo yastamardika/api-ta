@@ -22,7 +22,8 @@ const providers = [
   '@adonisjs/persona/providers/PersonaProvider',
   '@adonisjs/mail/providers/MailProvider',
   '@adonisjs/validator/providers/ValidatorProvider',
-  'adonis-midtrans/providers/MidtransProvider'
+  'adonis-midtrans/providers/MidtransProvider',
+  'adonis-search/providers/QueryProvider'
 ]
 
 /*
