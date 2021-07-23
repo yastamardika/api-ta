@@ -28,7 +28,6 @@ class SanggarController {
   async dashboardInfo({ params, response }) {
     const sanggar = await Sanggar.find(params.sanggarId);
     const status = await OrderStatus.findByOrFail("name", "completed");
-    // total sanggarOrder
     const totalOrderCompleted = await Order.query()
       .where("sanggarId", sanggar.id)
       .where("order_statusId", status.id)

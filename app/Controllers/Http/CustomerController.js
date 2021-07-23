@@ -38,7 +38,7 @@ class CustomerController {
         const orderStatus = await OrderStatus.findByOrFail("name", "paid");
         const order = await Order.findOrFail(params.orderId);
         const currentStatus = await order.status().fetch();
-        if (currentStatus.name != "proccessed") {
+        if (currentStatus.name != "processed") {
           if (currentStatus.name != "completed") {
             if (currentStatus.name != "failed") {
               await Order.query().where("id", params.orderId).update({
