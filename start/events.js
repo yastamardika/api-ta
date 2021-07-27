@@ -12,8 +12,8 @@ Event.on("user::created", async (payload) => {
 
   await Mail.send("mail.user", { user, token }, (message) => {
     message
+      .from("admin@i-tallenta.com")
       .to(payload.user.email)
-      .from(`<${Env.get("MAIL_USERNAME")}>`)
       .subject("Thanks for registering!");
   });
 });
@@ -26,8 +26,8 @@ Event.on("forgot::password", async (payload) => {
 
   await Mail.send("mail.resetpass", { token, user }, (message) => {
     message
+      .from("admin@i-tallenta.com")
       .to(payload.user.email)
-      .from(`<${Env.get("MAIL_USERNAME")}>`)
       .subject("Password Reset Request");
   });
 });
