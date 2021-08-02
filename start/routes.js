@@ -39,6 +39,7 @@ Route.group(() => {
 Route.group(() => {
   Route.get("/order", "CustomerController.indexOrderCustomer"); //daftar order yang dilakukan customer
   Route.get("/order/:orderId", "CustomerController.detailOrderCustomer"); //detail order yang dilakukan customer
+  Route.post("/order/:orderId/finish", "CustomerController.finishOrder"); //selesaikan pesanan
   Route.post("/auth/logout", "UserController.logout"); 
   Route.post("sanggar/:sanggarId/order", "CustomerController.createOrder");
   Route.post("/sanggar/order", "SanggarController.charge");
