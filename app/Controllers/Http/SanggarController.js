@@ -4,6 +4,8 @@ const Sanggar = use("App/Models/Sanggar");
 const DancePackage = use("App/Models/DancePackage");
 const Order = use("App/Models/Order");
 const Midtrans = use("Midtrans");
+const moment = use("moment");
+const Mail = use("Mail");
 const OrderStatus = use("App/Models/OrderStatus");
 
 class SanggarController {
@@ -164,22 +166,45 @@ class SanggarController {
     }
   }
 
-  async declinePayment({ params, request, response }) {
+  async declinePayment({ params, response }) {
     try {
       const order = await Order.findOrFail(params.orderId);
-      const refundParams = {
-        amount: order.total_amount,
-        reason: "Pesanan ditolak oleh sanggar",
-      };
+      const customer = await User.findOrFail(order.userId);
+      const dataOrder = await Order.query()
+        .where("id", params.orderId)
+        .with("customer")
+        .with("package")
+        .with("sanggar")
+        .fetch();
       const orderStatus = await OrderStatus.findByOrFail("name", "failed");
       const tra = await Order.query().where("id", params.orderId).update({
         order_statusId: orderStatus.id,
       });
       const status = await Midtrans.status(params.orderId);
-      // const refund = await Midtrans.refund(order.id, refundParams);
+      const orderDate = moment(order.created_at).format("LLL");
+      const dataOrderJSON = dataOrder.toJSON();
+      const orderPrice = new Intl.NumberFormat("id-ID", {
+        style: "currency",
+        currency: "IDR",
+      }).format(dataOrderJSON[0].package.harga);
+      await Mail.send(
+        "mail.decline-order",
+        {
+          customer,
+          dataOrder: dataOrder.toJSON(),
+          orderDate: orderDate,
+          orderPrice: orderPrice,
+        },
+        (message) => {
+          message
+            .to(customer.email)
+            .from("admin@i-tallenta.com")
+            .subject("Pesanan anda ditolak");
+        }
+      );
       return response
         .status(200)
-        .json({ message: "success", data: status, tra });
+        .json({ message: "success", data: status, tra, dataOrder });
     } catch (error) {
       return response.status(400).json({ message: "failed!" });
     }
@@ -380,12 +405,13 @@ class SanggarController {
       }
     } catch (error) {
       console.log(error);
-      midtransStatus = null;
+      midtransStatus = "null";
     }
     try {
       if (sanggar.id == params.sanggarId) {
         const order = await Order.query()
           .where("id", params.orderId)
+          .where("sanggarId", params.sanggarId)
           .with("customer")
           .with("package")
           .with("detail")
