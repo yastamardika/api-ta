@@ -6,6 +6,7 @@ const OrderDetail = use("App/Models/OrderDetail");
 const DancePackage = use("App/Models/DancePackage");
 const Midtrans = use("Midtrans");
 const moment = use("moment");
+const Mail = use('Mail')
 const Database = use("Database");
 const OrderStatus = use("App/Models/OrderStatus");
 
@@ -185,6 +186,46 @@ class CustomerController {
 
   async paymentSuccessPage({ response }) {
     return response.redirect("localhost:3000/order", false, 301);
+  }
+
+  async finishOrder({ auth, params,response }) {
+    // try {
+      const currentUser = await auth.getUser();
+      const toFinish = await Order.findOrFail(params.orderId);    
+      const order = await Order.query()
+        .where("userId", currentUser.id)
+        .where("id", params.orderId)
+        .with("package")
+        .with("detail")
+        .with("venue")
+        .with("sanggar")
+        .with("status")
+        .fetch();
+      const orderJSON = order.toJSON();
+      if (orderJSON[0].status.name == "processed" && moment().isSameOrAfter(orderJSON[0].venue.time)) {
+        const orderStatus = await OrderStatus.findByOrFail(
+          "name",
+          "completed"
+        );
+        await Order.query().where("id", params.orderId).update({
+          order_statusId: orderStatus.id,
+        });
+        const orderPrice = new Intl.NumberFormat("id-ID", {
+          style: "currency",
+          currency: "IDR",
+        }).format(orderJSON[0].package.harga);
+        const orderDate = moment(orderJSON[0].created_at).format("LLL");
+        await Mail.send('mail.completed-order', { orderJSON, orderPrice, orderDate }, (message) => {
+          message
+            .to(orderJSON[0].sanggar.email)
+            .from('admin@i-tallenta.com')
+            .subject('Pesanan anda telah selesai')
+        })
+      }
+      response.status(200).json(order);
+    // } catch (error) {
+    //   response.status(500).json({ message: "error!" });
+    // }
   }
 }
 module.exports = CustomerController;
