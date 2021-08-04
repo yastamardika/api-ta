@@ -65,7 +65,7 @@ class UserController {
     return await auth.generate(user);
   }
 
-  async verifyEmail({ request, params, session, response, view }) {
+  async verifyEmail({ request, session, view }) {
     const token = request.input("token");
     const user = await Persona.verifyEmail(token);
     session.flash({ message: "Email verified" });

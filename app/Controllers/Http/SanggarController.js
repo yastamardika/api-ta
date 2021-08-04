@@ -283,7 +283,6 @@ class SanggarController {
         const dancePackage = await DancePackage.create(allData);
         dancePackage.sanggarId = params.sanggarId;
         await dancePackage.save();
-
         return response
           .status(200)
           .json({ message: "Success", data: dancePackage });
@@ -345,7 +344,6 @@ class SanggarController {
   async indexOrderPartner({ auth, response }) {
     const currentUser = await auth.getUser();
     const sanggar = await Sanggar.findByOrFail("partnerId", currentUser.id);
-    console.log(sanggar.id);
     try {
       const order = await Order.query()
         .where("sanggarId", sanggar.id)
@@ -371,7 +369,6 @@ class SanggarController {
       const transactionStatus = midtransStatus.transaction_status;
       const order = await Order.findOrFail(params.orderId);
       const currentStatus = await order.status().fetch();
-      console.log(currentStatus.name);
       if (transactionStatus == "settlement") {
         const orderStatus = await OrderStatus.findByOrFail("name", "paid");
         if (currentStatus.name != "processed") {
@@ -404,7 +401,6 @@ class SanggarController {
         });
       }
     } catch (error) {
-      console.log(error);
       midtransStatus = "null";
     }
     try {
