@@ -6,7 +6,7 @@ const Database = use('Database')
 const Persona = use("Persona");
 
 class AdminController {
-  async indexUser({ req, res, view }) {
+  async indexUser({ res }) {
     const user = await User.all();
     return res(user);
   } 

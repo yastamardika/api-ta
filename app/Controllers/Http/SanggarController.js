@@ -226,7 +226,6 @@ class SanggarController {
     // Sample transactionStatus handling logic
     if (transactionStatus == "settlement") {
       const orderStatus = await OrderStatus.findByOrFail("name", "paid");
-      console.log(orderStatus);
       const tra = await Order.query().where("id", orderId).update({
         order_statusId: orderStatus.id,
       });

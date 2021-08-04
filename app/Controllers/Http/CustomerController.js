@@ -189,7 +189,7 @@ class CustomerController {
   }
 
   async finishOrder({ auth, params,response }) {
-    // try {
+    try {
       const currentUser = await auth.getUser();
       const toFinish = await Order.findOrFail(params.orderId);    
       const order = await Order.query()
@@ -223,9 +223,9 @@ class CustomerController {
         })
       }
       response.status(200).json(order);
-    // } catch (error) {
-    //   response.status(500).json({ message: "error!" });
-    // }
+    } catch (error) {
+      response.status(500).json({ message: "error!" });
+    }
   }
 }
 module.exports = CustomerController;
