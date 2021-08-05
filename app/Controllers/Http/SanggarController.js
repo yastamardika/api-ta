@@ -6,16 +6,29 @@ const Order = use("App/Models/Order");
 const Midtrans = use("Midtrans");
 const moment = use("moment");
 const Mail = use("Mail");
+const Query = use('Query')
 const OrderStatus = use("App/Models/OrderStatus");
 
 class SanggarController {
   async index({ response, request }) {
+    const query = new Query(request);
     const page = request.input("page", 1);
     try {
       const data = await User.query()
         .where("role", "partner")
-        .has("sanggar")
-        .whereHas("sanggar.packages", (builder) => {
+        .whereHas("sanggar", (builder) => {
+          builder.where(query.search([
+            'name'
+          ])).has('packages', (builder) => {
+            builder.whereNull("deleted_at");
+          })
+        })
+        .orWhereHas("sanggar.address",(builder) => {
+          builder.where(query.search([
+            'city', 'province'
+          ]))
+        })
+        .has("sanggar.packages", (builder) => {
           builder.whereNull("deleted_at");
         })
         .with("sanggar.address")
