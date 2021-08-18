@@ -111,7 +111,7 @@ class SanggarController {
         .fetch();
       const minPrice = await DancePackage.query()
         .where("sanggarId", params.id)
-        .getMin("harga");
+        .min("harga");
       response
         .status(201)
         .json({ message: "Success", data: sanggar, min_price: minPrice });
