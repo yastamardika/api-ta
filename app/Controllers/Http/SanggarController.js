@@ -69,12 +69,14 @@ class SanggarController {
       .where("sanggarId", sanggar.id)
       .where("order_statusId", status.id)
       .getSum("total_amount");
+    const totalPackage = await DancePackage.query().where("sanggarId", sanggar.id).getCount();
     response.status(200).json({
       total_order_completed: totalOrderCompleted,
       all_sanggar_order_count: allSanggarOrderCount,
       latest_order: latestOrder,
       total_customer: totalCustomer,
       total_income: totalIncome,
+      total_package: totalPackage
     });
   }
 
