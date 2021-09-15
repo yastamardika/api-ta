@@ -93,6 +93,13 @@ module.exports = {
   |
   */
   validationMessages: () => {
-    return {}
+    return {
+      'email.required': 'Mohon isi email anda',
+      'email.exist': 'Email sudah digunakan, mohon masukkan email yang lain',
+      'uid.exist': 'Username sudah digunakan, mohon masukkan username lain',
+      'password.mis_match': 'Password salah!, mohon ulangi lagi',
+      'old_password.mis_match': 'Password salah!, mohon ulangi lagi',
+      'password_confirmation.mis_match': 'Konfirmasi password berbeda, mohon ulangi lagi',
+    }
   }
 }
