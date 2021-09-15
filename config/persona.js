@@ -96,7 +96,8 @@ module.exports = {
     return {
       'email.required': 'Mohon isi email anda',
       'email.unique': 'Email sudah digunakan, mohon masukkan email yang lain',
-      'uid.unique': 'Username sudah digunakan, mohon masukkan username lain',
+      'uid.exist': 'Akun tidak ditemukan, dimohon untuk melakukan registrasi terlebih dahulu',
+      'username.unique': 'Username sudah digunakan, mohon masukkan username lain',
       'password.mis_match': 'Password salah!, mohon ulangi lagi',
       'old_password.mis_match': 'Password salah!, mohon ulangi lagi',
       'password_confirmation.mis_match': 'Konfirmasi password berbeda, mohon ulangi lagi',
