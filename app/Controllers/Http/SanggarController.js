@@ -69,7 +69,7 @@ class SanggarController {
       .where("sanggarId", sanggar.id)
       .where("order_statusId", status.id)
       .getSum("total_amount");
-    const totalPackage = await DancePackage.query().where("sanggarId", sanggar.id).getCount();
+    const totalPackage = await DancePackage.query().where("sanggarId", sanggar.id).whereNull('deleted_at').getCount();
     response.status(200).json({
       total_order_completed: totalOrderCompleted,
       all_sanggar_order_count: allSanggarOrderCount,
