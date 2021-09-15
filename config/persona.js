@@ -101,6 +101,7 @@ module.exports = {
       'password.mis_match': 'Password salah!, mohon ulangi lagi',
       'old_password.mis_match': 'Password salah!, mohon ulangi lagi',
       'password_confirmation.mis_match': 'Konfirmasi password berbeda, mohon ulangi lagi',
+      'password.confirmed': 'Konfirmasi password berbeda, mohon ulangi lagi',
     }
   }
 }
