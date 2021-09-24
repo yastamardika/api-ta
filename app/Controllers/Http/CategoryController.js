@@ -11,6 +11,15 @@ class CategoryController {
     }
   }
 
+  async detailCategory({response, params}) {
+    try {
+      const category = await Category.find(params.categoryId);
+      return response.status(200).json({ categories: category });
+    } catch (error) {
+      return response.status(400).json({ message: "error!" });
+    }
+  }
+
   async createCategory({ request, response }) {
     const payload = request.all();
     const newCategory = await Category.create(payload);

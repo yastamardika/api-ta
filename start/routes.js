@@ -80,6 +80,7 @@ Route.group(() => {
     Route.get("/users", "AdminController.getAllUser")
     Route.get("/user/:id", "AdminController.getDetailUser")
     Route.get("/admin/categories", "CategoryController.indexCategory");
+    Route.get("/admin/categories/:categoryId", "CategoryController.detailCategory");
     Route.post("/verify-partner/:id", "AdminController.verifyPartner");
     Route.post("/decline-verify/:id", "AdminController.declineVerify");
     Route.post("/admin/categories", "CategoryController.createCategory");
