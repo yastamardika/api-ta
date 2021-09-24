@@ -22,6 +22,9 @@ class Order extends Model {
     package(){
         return this.hasOne('App/Models/DancePackage','packageId', 'id')
     }
+    feedback(){
+        return this.belongsTo('App/Models/Feedback', 'id', 'orderId')
+    }
 }
 
 module.exports = Order
