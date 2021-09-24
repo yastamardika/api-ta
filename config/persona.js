@@ -98,10 +98,10 @@ module.exports = {
       'email.unique': 'Email sudah digunakan, mohon masukkan email yang lain',
       'uid.exists': 'Akun tidak ditemukan, dimohon untuk melakukan registrasi terlebih dahulu',
       'username.unique': 'Username sudah digunakan, mohon masukkan username lain',
+      'password.confirmed': 'Konfirmasi password berbeda, mohon ulangi lagi',
       'password.mis_match': 'Password salah!, mohon ulangi lagi',
       'old_password.mis_match': 'Password salah!, mohon ulangi lagi',
       'password_confirmation.mis_match': 'Konfirmasi password berbeda, mohon ulangi lagi',
-      'password.confirmed': 'Konfirmasi password berbeda, mohon ulangi lagi',
     }
   }
 }
