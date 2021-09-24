@@ -39,6 +39,8 @@ Route.group(() => {
 Route.group(() => {
   Route.get("/order", "CustomerController.indexOrderCustomer"); //daftar order yang dilakukan customer
   Route.get("/order/:orderId", "CustomerController.detailOrderCustomer"); //detail order yang dilakukan customer
+  Route.get("/order/:orderId/feedback", "FeedbackController.getDetailFeedback"); 
+  Route.post("/order/:orderId/feedback", "FeedbackController.createFeedback"); 
   Route.post("/order/:orderId/finish", "CustomerController.finishOrder"); //selesaikan pesanan
   Route.post("/auth/logout", "UserController.logout"); 
   Route.post("sanggar/:sanggarId/order", "CustomerController.createOrder");
@@ -50,6 +52,7 @@ Route.group(() => {
   Route.patch("/profile/change-username", "UserController.editUsername");
   Route.patch("/profile/change-profile-photo", "UserController.editProfilePhoto");
   Route.patch("/sanggar/:sanggarId/edit", "SanggarController.editSanggarInfo");
+  Route.patch("/order/:orderId/feedback", "FeedbackController.editFeedback"); 
 })
   .middleware(["auth"])
   .prefix("api/");
@@ -76,8 +79,12 @@ Route.group(() => {
     Route.get("/partner-candidate", "AdminController.getPartnerCandidate")
     Route.get("/users", "AdminController.getAllUser")
     Route.get("/user/:id", "AdminController.getDetailUser")
+    Route.get("/admin/categories", "CategoryController.indexCategory");
     Route.post("/verify-partner/:id", "AdminController.verifyPartner");
     Route.post("/decline-verify/:id", "AdminController.declineVerify");
+    Route.post("/admin/categories", "CategoryController.createCategory");
+    Route.put("/admin/categories/:id", "CategoryController.editCategory");
+    Route.delete("/admin/categories/:id", "CategoryController.deleteCategory");
     
   })
     .middleware(["auth", "rbac:admin"])
