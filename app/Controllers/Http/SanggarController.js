@@ -62,6 +62,7 @@ class SanggarController {
       .pickInverse(5);
     // total pelanggan
     const totalCustomer = await Order.query()
+      .where("order_statusId", status.id)
       .where("sanggarId", sanggar.id)
       .getCountDistinct("userId");
     // total pemasukan
