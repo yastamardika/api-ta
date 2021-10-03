@@ -60,7 +60,9 @@ class AdminController {
         .with("sanggar")
         .with("status")
         .fetch();
-      response.status(200).json({ message: "success!", data: order });
+      const totalCustomer = await User.query().where('role', 'customer').getCount()
+      const totalPartner = await User.query().where('role', 'partner').getCount()
+      response.status(200).json({ message: "success!", data: order, totalCustomer, totalPartner });
     } catch (error) {
       response.status(500).json({ message: error });
     }
