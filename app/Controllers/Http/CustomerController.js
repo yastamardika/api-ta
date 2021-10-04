@@ -82,7 +82,6 @@ class CustomerController {
         .with("sanggar")
         .with("status")
         .fetch();
-      const midtransStatus = await Midtrans.status(params.orderId);
       response
         .status(200)
         .json({
@@ -221,6 +220,8 @@ class CustomerController {
             .from('admin@i-tallenta.com')
             .subject('Pesanan anda telah selesai')
         })
+      } else if (orderJSON[0].status.name == "processed" && !moment().isSameOrAfter(orderJSON[0].venue.time)) {
+        response.status(400).json({message : 'Mohon selesaikan setelah tanggal acara'});
       }
       response.status(200).json(order);
     } catch (error) {
