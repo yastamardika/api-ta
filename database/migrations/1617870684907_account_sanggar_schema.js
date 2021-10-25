@@ -19,15 +19,12 @@ class AccountSanggarSchema extends Schema {
       table.timestamps();
     })
     this.table("orders", (table) => {
-      table.timestamp("deleted_at");
-    })
-    this.table("payments", (table) => {
-      table.timestamp("deleted_at");
+      table.datetime("deleted_at");
     })
   }
 
   down() {
-    this.drop("account_sanggars");
+    // this.drop("account_sanggars");
   }
 }
 

@@ -12,7 +12,6 @@ class DancePackageSchema extends Schema {
       table.string('durasi',200)
       table.text('deskripsi')
       table.string('foto',254)
-
       table.timestamps()
     })
   }

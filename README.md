@@ -1,6 +1,5 @@
-# Adonis fullstack application
-
-This is the fullstack boilerplate for AdonisJs, it comes pre-configured with.
+# I-tallenta mini backend service
+This is the backend application for i-tallenta, it comes pre-configured with.
 
 1. Bodyparser
 2. Session
@@ -29,3 +28,8 @@ Run the following command to run startup migrations.
 ```js
 adonis migration:run
 ```
+
+### CI/CD
+.profile
+release: ENV_SILENT=true node ace migration:run --force
+release: ENV_SILENT=true node ace seed --force

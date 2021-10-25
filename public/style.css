@@ -1,4 +1,4 @@
-@import url('https://fonts.googleapis.com/css?family=Montserrat:300');
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500&display=swap');
 
 html, body {
   height: 100%;
@@ -6,10 +6,12 @@ html, body {
 }
 
 body {
-  font-family: 'Montserrat', sans-serif;
+  font-family: 'Poppins', sans-serif;
   font-weight: 300;
-  background-image: url("/splash.png");
+  background: url("https://res.cloudinary.com/i-tallenta/image/upload/v1621326779/static/bg_xji8b6.png") no-repeat;
+  background-size: 100%;
   background-color: #220052;
+  color: #220052;
 }
 
 * {
@@ -74,6 +76,8 @@ a {
 }
 
 p {
+  color: #220052;
+  font-weight: 400;
   margin: 0.83rem 0;
 }
 

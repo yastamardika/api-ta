@@ -17,10 +17,10 @@ const OrderStatus =  use("App/Models/OrderStatus");
 class OrderStatusSeeder {
   async run () {
     await OrderStatus.create({
-      name : "created",
-    });
-    await OrderStatus.create({
       name : "waiting for payment",
+    });
+      await OrderStatus.create({
+      name : "paid",
     });
     await OrderStatus.create({
       name : "processed",
