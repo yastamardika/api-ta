@@ -1,4 +1,4 @@
-# I_tallenta mini backend service
+# I-tallenta mini backend service
 This is the backend application for i-tallenta, it comes pre-configured with.
 
 1. Bodyparser
