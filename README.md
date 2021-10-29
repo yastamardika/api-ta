@@ -1,6 +1,5 @@
-# Adonis fullstack application
-
-This is the fullstack boilerplate for AdonisJs, it comes pre-configured with.
+# I-tallenta mini backend service
+This is the backend application for i-tallenta, it comes pre-configured with.
 
 1. Bodyparser
 2. Session
