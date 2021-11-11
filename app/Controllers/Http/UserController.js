@@ -5,9 +5,10 @@ const Persona = use("Persona");
 const SanggarAddress = use("App/Models/AddressSanggar");
 const Sanggar = use("App/Models/Sanggar");
 const Database = use("Database");
+const SECRET_KEY = "6LfaLCkdAAAAABGi8OKnZZeFjjxb2V4sZ7eUzVBk"
+const fetch = require('node-fetch')
 
 class UserController {
-
   async getCurrentUser({ auth }) {
     const user = await auth.getUser();
     const currentUser = await User.query()
@@ -56,13 +57,19 @@ class UserController {
   }
   async register({ request, auth, response }) {
     const payload = request.only([
+      "token",
       "username",
       "email",
       "password",
       "password_confirmation",
     ]);
-    const user = await Persona.register(payload);
-    return await auth.generate(user);
+    const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${payload.token}`)
+    if (response.success) {
+      const user = await Persona.register(payload);
+      return await auth.generate(user);
+    }else{
+      return response.status(500).json({message: 'captcha not valid!', response})
+    }
   }
 
   async verifyEmail({ request, session, view }) {
