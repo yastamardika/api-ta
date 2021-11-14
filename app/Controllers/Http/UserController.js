@@ -63,12 +63,12 @@ class UserController {
       "password",
       "password_confirmation",
     ]);
-    const response = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${payload.token}`)
-    if (response.success) {
+    const checkToken = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${payload.token}`)
+    if (checkToken.success) {
       const user = await Persona.register(payload);
       return await auth.generate(user);
     }else{
-      return response.status(500).json({message: 'captcha not valid!', response})
+      return response.status(500).json({message: 'captcha not valid!', checkToken})
     }
   }
 
