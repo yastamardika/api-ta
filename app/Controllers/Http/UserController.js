@@ -5,8 +5,8 @@ const Persona = use("Persona");
 const SanggarAddress = use("App/Models/AddressSanggar");
 const Sanggar = use("App/Models/Sanggar");
 const Database = use("Database");
-const SECRET_KEY = "6LfaLCkdAAAAABGi8OKnZZeFjjxb2V4sZ7eUzVBk"
-const fetch = require('node-fetch')
+const SECRET_KEY = "6LfaLCkdAAAAABGi8OKnZZeFjjxb2V4sZ7eUzVBk";
+import { fetch } from "node-fetch";
 
 class UserController {
   async getCurrentUser({ auth }) {
