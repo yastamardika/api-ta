@@ -6,7 +6,6 @@ const SanggarAddress = use("App/Models/AddressSanggar");
 const Sanggar = use("App/Models/Sanggar");
 const Database = use("Database");
 const SECRET_KEY = "6LfaLCkdAAAAABGi8OKnZZeFjjxb2V4sZ7eUzVBk";
-const fetch = use('node-fetch');
 
 class UserController {
   async getCurrentUser({ auth }) {
@@ -63,6 +62,7 @@ class UserController {
       "password",
       "password_confirmation",
     ]);
+    const fetch = (url) => import('node-fetch').then(({default: fetch}) => fetch(url));
     const checkToken = await fetch(`https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${payload.token}`)
     if (checkToken.success) {
       const user = await Persona.register(payload);
