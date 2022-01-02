@@ -62,9 +62,10 @@ class UserController {
       "password",
       "password_confirmation",
     ]);
-    const verifToken = request.only([
+    const verifToken = request.only(
       "token"
-    ])
+    )
+    console.log(verifToken);
     const checkToken = await Request.get(`https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${verifToken}`)
     const token = checkToken.data
     if (token.success) {
