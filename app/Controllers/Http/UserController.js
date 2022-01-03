@@ -65,8 +65,8 @@ class UserController {
     const verifToken = request.only(
       "token"
     )
-    console.log(verifToken);
-    const checkToken = await Request.get(`https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${verifToken}`)
+    console.log(verifToken.token);
+    const checkToken = await Request.get(`https://www.google.com/recaptcha/api/siteverify?secret=${SECRET_KEY}&response=${verifToken.token}`)
     const token = checkToken.data
     if (token.success) {
       const user = await Persona.register(payload);
