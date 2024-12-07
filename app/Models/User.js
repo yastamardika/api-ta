@@ -36,7 +36,7 @@ class User extends Model {
   }
 
   static get hidden() {
-    return ["password", "account_status"];
+    return ["password"];
   }
 
   
